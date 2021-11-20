@@ -28,7 +28,7 @@ def get_file_paths(path: str) -> Dict[str, str]:
   return paths;
 
 
-def process_experiment(path: str, destination: str=None) -> str:
+def process_experiment(path: str, name: str) -> str:
   """Takes as input the root folder of a HydroShoot experiment and 
   outputs a directory 'results/' containing the following serialized objects: 
 
@@ -57,11 +57,7 @@ def process_experiment(path: str, destination: str=None) -> str:
   print(f'\t{len(list(store.values())[0]):<4} state variables')
 
   # Create destination folder if necessary
-  if destination is None:
-    experiment_name = arrow.now().format('YYYY-MM-DD_HHmm_SSSSSSSSSS')  # Add a lot of detail to the second mark to ensure it will be a unique directory :)
-  else:
-    experiment_name = destination
-  destination = os.path.join(os.getcwd(), f'results/{experiment_name}')
+  destination = os.path.join(os.getcwd(), f'results/{name}')
   Path(destination).mkdir(parents=True, exist_ok=True)
 
   # Write all results to disk
@@ -74,10 +70,13 @@ def process_experiment(path: str, destination: str=None) -> str:
   return destination
 
 if __name__ == "__main__":
+  if len(sys.argv) < 3:
+    print("1st arg: path/to/experiment/,   2nd arg: experiment name")
+    exit()
   path = sys.argv[1]
-  destination = sys.argv[2] if len(sys.argv) > 2 else None
+  name = sys.argv[2]
   if not os.path.isdir(path):
     print(f"'{path}' is not a valid path.")
     exit()
-  output_dir = process_experiment(path, destination=destination)
+  output_dir = process_experiment(path, name)
   print(f'Results written to {output_dir}\n')

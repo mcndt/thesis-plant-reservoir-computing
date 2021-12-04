@@ -3,13 +3,14 @@ import os
 import pandas as pd
 import numpy as np
 import arrow
+import logging
 
 from pickle import dump
 from typing import Dict
 from pathlib import Path
 from shutil import copyfile
 
-from extract_vertex_properties import get_time_series_for_class
+from src.post_processing.extract_vertex_properties import get_time_series_for_class
 
 def get_file_paths(path: str) -> Dict[str, str]:
   """Checks if the passed path contains all the required experiment inputs and outputs.
@@ -28,7 +29,7 @@ def get_file_paths(path: str) -> Dict[str, str]:
   return paths;
 
 
-def process_experiment(path: str, name: str) -> str:
+def process_experiment(path: str, name: str, logger=None) -> str:
   """Takes as input the root folder of a HydroShoot experiment and 
   outputs a directory 'results/' containing the following serialized objects: 
 
@@ -50,11 +51,11 @@ def process_experiment(path: str, name: str) -> str:
 
   # Extract all leaf-level series
   timestamps, store = get_time_series_for_class(paths['output_dir'], 'L')
-  print('Extracted time series: ')
-  print(f'\tfrom {timestamps[0].format("YYYY-MM-DD HH:mm")} to {timestamps[-1].format("YYYY-MM-DD HH:mm")}')
-  print(f'\t{len(timestamps):<4} steps')
-  print(f'\t{len(store):<4} properties')
-  print(f'\t{len(list(store.values())[0]):<4} state variables')
+  logger.info(f'\nExtracted time series: '
+              f'\n\tfrom {timestamps[0].format("YYYY-MM-DD HH:mm")} to {timestamps[-1].format("YYYY-MM-DD HH:mm")}'
+              f'\n\t{len(timestamps):<4} steps'
+              f'\n\t{len(store):<4} properties'
+              f'\n\t{len(list(store.values())[0]):<4} state variables')
 
   # Create destination folder if necessary
   destination = os.path.join(os.getcwd(), f'results/{name}')
@@ -78,5 +79,8 @@ if __name__ == "__main__":
   if not os.path.isdir(path):
     print(f"'{path}' is not a valid path.")
     exit()
-  output_dir = process_experiment(path, name)
+
+  logger = logging.Logger('Main')
+  logger.setLevel(logging.INFO)
+  output_dir = process_experiment(path, name, logger=logger)
   print(f'Results written to {output_dir}\n')

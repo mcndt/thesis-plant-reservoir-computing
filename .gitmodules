@@ -1,0 +1,3 @@
+[submodule "hydroshoot-prc-experiments"]
+	path = hydroshoot-prc-experiments
+	url = git@github.ugent.be:mcannood/hydroshoot-prc-experiments.git

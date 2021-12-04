@@ -35,26 +35,34 @@ def run_experiment(path, exp_name, interval: Tuple[Arrow, Arrow]=None):
 	check_path(path)
 	tmp_dir = make_tmp_dir(path)
 	
-	# change the simulation time range
-	if interval is not None:
-		start, end = interval
-		change_simulation_interval(tmp_dir, start, end)
-
-	# run the simulation
-	if exp_name is None:
-		exp_name = uuid4()
-	run_simulation(tmp_dir, sim_name=exp_name)
-
-	# process simulation results
 	try:
-		process_experiment(tmp_dir, exp_name, logger=logger)
-		success = True
-	except Exception as e:
-		logger.error(f'Error processing simulation results: \n\n{e}')
+		# change the simulation time range
+		if interval is not None:
+			start, end = interval
+			change_simulation_interval(tmp_dir, start, end)
 
-	# cleanup
-	remove_tmp_dir(tmp_dir)
-	return success
+		# run the simulation
+		if exp_name is None:
+			exp_name = uuid4()
+
+		# kwargs = {}
+		# if show_output:
+		# 	kwargs['creationflags'] = subprocess.CREATE_NEW_CONSOLE
+
+		run_simulation(tmp_dir, sim_name=exp_name)
+
+		# process simulation results
+		try:
+			process_experiment(tmp_dir, exp_name, logger=logger)
+			success = True
+		except Exception as e:
+			logger.error(f'Error processing simulation results: \n\n{e}')
+	except KeyboardInterrupt:
+		logger.info(f'Keyboard interrupt. Cleaning up tmp files...')
+	finally:
+		# cleanup
+		remove_tmp_dir(tmp_dir)
+		return success
 
 
 def configure_logging():
@@ -133,6 +141,9 @@ def run_simulation(path, sim_name=None):
 			logger.info(f'[{sim_name}] Simulation process finished.')
 	except subprocess.CalledProcessError as e:
 			logger.info(f'[{sim_name}] Simulation process failed: \n\n{e}')
+	except Exception as e:
+		logger.info(f'Exception during process: \n\n{e}')
+		raise e
 	finally:
 		# Copy simulation process logs to results directory
 		log_dst = os.path.join(os.getcwd(), f'results/logs/')
@@ -147,4 +158,4 @@ if __name__ == '__main__':
 		exit(-1)
 	configure_logging()
 	path = sys.argv[1]
-	run_experiment(path, None)
+	run_experiment(path, None, interval=None)

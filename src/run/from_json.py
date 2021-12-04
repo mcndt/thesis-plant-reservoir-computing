@@ -17,6 +17,7 @@ import os
 import sys
 import json
 import arrow
+import argparse
 from multiprocessing import Pool, log_to_stderr, get_logger
 from src.run.sim_process import run_experiment, check_path, configure_logging
 
@@ -36,7 +37,10 @@ def get_args(fpath: str):
 			end = arrow.get(end, 'YYYY-MM-DD')
 			length = int(length)
 
-			for i, r in enumerate(arrow.Arrow.range('day', start, end.shift(days=-(length-1)))):
+			extend_edate = "extend" in exp and exp["extend"]
+			offset_days = 0 if extend_edate else -(length-1)
+
+			for i, r in enumerate(arrow.Arrow.range('day', start, end.shift(days=offset_days))):
 				interval = r, r.shift(days=+(length-1), hours=+23)
 				exp_name = f'{exp["name"]}_{i}'
 				args.append((exp["path"], exp_name, interval))
@@ -48,6 +52,7 @@ def run_experiments(fpath: str):
 	"""Converts the JSON file at the fpath argument into a list of simulation
 	arguments, and executes the simulations using a multiprocessing worker pool."""
 	args = get_args(fpath)
+
 
 	print('\n\n+---------------------------------+')
 	print(f'Queueing {len(args)} experiment{"s" if len(args) > 2 else ""}:')
@@ -74,10 +79,16 @@ def run_experiments(fpath: str):
 
 
 if __name__ == '__main__':
-	if len(sys.argv) != 2:
-		print('\nWrong arguments. Expected exactly 1 argument')
-		print(f'\nUsage: python -m src.run.from_json <json_file>\n')
-		exit(-1)
+	# create CLI argument parser
+	parser = argparse.ArgumentParser(
+		description=f'Run a batch of experiments using a multiprocessing worker pool.'
+								f'\n\nSee sample_experiments/ for examples.'
+	)
+	parser.add_argument('json_file', type=str, help="The JSON file containing the experiments to run.")
+
+  # parse the arguments
+	args = parser.parse_args()
+
 	configure_logging()
 	path = sys.argv[1]
-	run_experiments(path)
+	run_experiments(args.json_file)

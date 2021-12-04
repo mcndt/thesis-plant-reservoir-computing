@@ -12,7 +12,7 @@
     "hydraulic_structure": true,
     "negligible_shoot_resistance": false,
     "energy_budget": true,
-    "soil_water_deficit": true
+    "soil_water_deficit": false
   },
   "phenology": {
     "emdate": "2012-04-01 00:00:00",

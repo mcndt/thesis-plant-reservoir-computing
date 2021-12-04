@@ -80,7 +80,7 @@ if __name__ == "__main__":
     print(f"'{path}' is not a valid path.")
     exit()
 
-  logger = logging.get_logger()
+  logger = logging.Logger('Main')
   logger.setLevel(logging.INFO)
   output_dir = process_experiment(path, name, logger=logger)
   print(f'Results written to {output_dir}\n')

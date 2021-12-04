@@ -129,8 +129,9 @@ def run_simulation(path, sim_name=None):
 			logger.info(f'[{sim_name}] Running simulation process...')
 			# subprocess.run() blocks until finished
 			p = subprocess.run(command, shell=True, executable='/bin/bash', stdout=log_file, stderr=log_file)  
+			p.check_returncode()
 			logger.info(f'[{sim_name}] Simulation process finished.')
-	except Exception as e:
+	except subprocess.CalledProcessError as e:
 			logger.info(f'[{sim_name}] Simulation process failed: \n\n{e}')
 	finally:
 		# Copy simulation process logs to results directory

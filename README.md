@@ -15,7 +15,7 @@ python -m src.run.from_json <json_file>
 
 Example of a JSON file describing an experiment:
 
-```json
+```javascript
 {
     "name": "gdc_can1_6days", // name of the output directory
     "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit", // path to the hydroshoot experiment directory. Must contain a python script containing the simulation called "sim.py"

@@ -51,11 +51,15 @@ def process_experiment(path: str, name: str, logger=None) -> str:
 
   # Extract all leaf-level series
   timestamps, store = get_time_series_for_class(paths['output_dir'], 'L')
-  logger.info(f'\nExtracted time series: '
-              f'\n\tfrom {timestamps[0].format("YYYY-MM-DD HH:mm")} to {timestamps[-1].format("YYYY-MM-DD HH:mm")}'
-              f'\n\t{len(timestamps):<4} steps'
-              f'\n\t{len(store):<4} properties'
-              f'\n\t{len(list(store.values())[0]):<4} state variables')
+
+  if logger:
+    logger.info(f'[{name}] Extracted {len(timestamps)} steps, {len(store)} properties, {len(list(store.values())[0])} state size')
+  else:
+    print(f'\nExtracted time series: '
+          f'\n\tfrom {timestamps[0].format("YYYY-MM-DD HH:mm")} to {timestamps[-1].format("YYYY-MM-DD HH:mm")}'
+          f'\n\t{len(timestamps):<4} steps'
+          f'\n\t{len(store):<4} properties'
+          f'\n\t{len(list(store.values())[0]):<4} state variables')
 
   # Create destination folder if necessary
   destination = os.path.join(os.getcwd(), f'results/{name}')
@@ -80,7 +84,5 @@ if __name__ == "__main__":
     print(f"'{path}' is not a valid path.")
     exit()
 
-  logger = logging.Logger('Main')
-  logger.setLevel(logging.INFO)
-  output_dir = process_experiment(path, name, logger=logger)
+  output_dir = process_experiment(path, name)
   print(f'Results written to {output_dir}\n')

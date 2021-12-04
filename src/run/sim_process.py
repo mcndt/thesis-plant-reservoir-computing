@@ -9,7 +9,7 @@ import arrow
 import logging
 import subprocess
 
-from shutil import copytree, rmtree, ignore_patterns
+from shutil import copytree, rmtree, ignore_patterns, copyfile
 from pathlib import Path
 from uuid import uuid4
 from multiprocessing import current_process, get_logger, log_to_stderr
@@ -41,19 +41,16 @@ def run_experiment(path, exp_name, interval: Tuple[Arrow, Arrow]=None):
 		change_simulation_interval(tmp_dir, start, end)
 
 	# run the simulation
-	try:
-		run_simulation(tmp_dir, sim_name=exp_name, verbose=False)
-		# process simulation results
-		if exp_name is None:
-			exp_name = uuid4()
-		try:
-			process_experiment(tmp_dir, exp_name, logger=logger)
-			success = True
-		except Exception as e:
-			logger.error(f'Error processing simulation results: \n\n{e}')
+	if exp_name is None:
+		exp_name = uuid4()
+	run_simulation(tmp_dir, sim_name=exp_name)
 
+	# process simulation results
+	try:
+		process_experiment(tmp_dir, exp_name, logger=logger)
+		success = True
 	except Exception as e:
-		logger.error(f"Error running simulation: \n\n{e}")
+		logger.error(f'Error processing simulation results: \n\n{e}')
 
 	# cleanup
 	remove_tmp_dir(tmp_dir)
@@ -111,11 +108,12 @@ def change_simulation_interval(path, start, end):
 	get_logger().info(f'Wrote simulation interval {start.format(HYDROSHOOT_DATETIME_FORMAT)}-{end.format(HYDROSHOOT_DATETIME_FORMAT)} to params.json')
 
 
-def run_simulation(path, sim_name=None, verbose=False):
+def run_simulation(path, sim_name=None):
 	"""Start the simulation at the given path (path must contain sim.py script)
 	and blocks until the simulation is completed. 
 	
 	sim_name keyword argument is used for more descriptive logging."""
+	logger = get_logger()
 	
 	command = f"""
 				cd {path};
@@ -124,29 +122,28 @@ def run_simulation(path, sim_name=None, verbose=False):
 				python sim.py;
 			  """
 
-	logger = get_logger()
-	logger.info(f'Starting simulation "{sim_name}"...')
+	sim_logs = os.path.join(path, 'output.txt')
 
-	run_kwargs = {}
-	if verbose:
-		run_kwargs['stdout'] = sys.stdout
-		run_kwargs['stderr'] = sys.stderr
-	else:
-		run_kwargs['capture_output'] = True
+	try:
+		with open(sim_logs, 'w') as log_file:
+			logger.info(f'[{sim_name}] Running simulation process...')
+			# subprocess.run() blocks until finished
+			p = subprocess.run(command, shell=True, executable='/bin/bash', stdout=log_file, stderr=log_file)  
+			logger.info(f'[{sim_name}] Simulation process finished.')
+	except Exception as e:
+			logger.info(f'[{sim_name}] Simulation process failed: \n\n{e}')
+	finally:
+		# Copy simulation process logs to results directory
+		log_dst = os.path.join(os.getcwd(), f'results/logs/')
+		Path(log_dst).mkdir(parents=True, exist_ok=True)
+		copyfile(sim_logs, os.path.join(log_dst, f'{sim_name}_output.txt'))
 
-	# subprocess.run() blocks until finished
-	p = subprocess.run(command, shell=True, executable='/bin/bash', **run_kwargs)  
-	logger.info(f'Simulation finished: "{sim_name}".')
-	if not (__name__ == '__main__' or verbose):
-		stderr = p.stderr.decode().strip();
-		if len(stderr) > 0:
-			logger.warn(stderr)
-		
-
+	
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
-		print('Wrong arguments. Expects exactly 1 argument')
-		print(f'Usage: python {__file__} path/to/experiment/')
+		print('\nWrong arguments. Expected exactly 1 argument')
+		print(f'\nUsage: python -m src.run.sim_process <experiment_dir>\n')
 		exit(-1)
+	configure_logging()
 	path = sys.argv[1]
 	run_experiment(path, None)

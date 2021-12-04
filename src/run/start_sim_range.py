@@ -4,7 +4,7 @@ import logging
 from multiprocessing import Process, Pool, log_to_stderr, get_logger
 from src.run.sim_process import run_experiment, check_path
 
-def main(path, start, end, length):
+def start_sim_range(path, start, end, length):
 
 	configure_logging()
 
@@ -45,4 +45,4 @@ if __name__ == '__main__':
 	edate = arrow.get(edate, 'YYYY-MM-DD')
 	length = int(length)
 
-	main(path, sdate, edate, length)
+	start_sim_range(path, sdate, edate, length)

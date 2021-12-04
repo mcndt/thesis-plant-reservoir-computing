@@ -9,7 +9,8 @@
       "args": ["/media/mcndt/thesis/hydroshoot/example/test_experiment"],
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/src/run/sim_process.py",
+      // "program": "${workspaceFolder}/src/run/sim_process.py",
+      "module": "src.run.sim_process",
       "console": "integratedTerminal"
     }
   ]

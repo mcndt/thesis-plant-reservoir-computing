@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 from src.model.reservoir_state import ReservoirState
+from src.util import get_dirs_in_directory
 
 from typing import List
 
@@ -63,18 +64,23 @@ class HydroShootExperiment:
         """Get the input keys available."""
         return tuple(self.outputs.columns)
 
+    def get_targets(self) -> tuple:
+        """Get the target keys available."""
+        target_keys = []
+        target_keys += [f'input_{k}' for k in self.get_input_variables()]
+        target_keys += [f'output_{k}' for k in self.get_output_variables()]
+        return (*target_keys,)
+
     def get_state_variables(self) -> tuple:
         return self.states.get_variables()
 
-    def get_target(self, target, scope=None) -> np.ndarray:
+    def get_target(self, target) -> np.ndarray:
         """Get an input our output by key. Explicitly select the scope with
         scope kwarg ('inputs' or 'outputs')"""
-        if target in self.get_input_variables() and target in self.get_output_variables() and scope is None:
-            raise KeyError(f'Target \'{target}\' is ambiguous because it appears in multiple scopes (try kwarg scope=\'outputs\' or \'inputs\')')
-        if target in self.get_input_variables() and (scope is None or scope == 'inputs'):
-            return self.inputs[target].to_numpy()
-        elif target in self.get_output_variables() and (scope is None or scope == 'outputs'):
-            return self.outputs[target].to_numpy()
+        if target.startswith('input_') and target[6:] in self.get_input_variables():
+            return self.inputs[target[6:]].to_numpy()
+        elif target.startswith('output_') and target[7:] in self.get_output_variables():
+            return self.outputs[target[7:]].to_numpy()
         else:
             raise KeyError(f"No target of name '{target}'")
 
@@ -97,12 +103,3 @@ def load_runs(path) -> List[HydroShootExperiment]:
         run = HydroShootExperiment(run_path)
         runs.append(run)
     return runs
-
-
-def get_dirs_in_directory(path) -> List[str]:
-    """get all subdirectories in the given path (non-recursive)."""
-    dirs = []
-    for (dirpath, dirnames, filenames) in os.walk(path):
-        dirs.extend([f for f in dirnames])
-        break  # only explore top level directory
-    return dirs

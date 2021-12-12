@@ -1,11 +1,13 @@
 """Contains utility function for use in interactive notebooks."""
 
+VARIABLE_NAMES = {'An': '$A_n$', 'Ei': '$E_i$', 'u': '$u$', 'Tlc': '$T_{lc}$', 'Flux': '$F$',
+                  'Eabs': '$E_{abs}$', 'gs': '$g_s$', 'E': '$E$', 'gb': '$g_b$', 'psi_head': '$\psi_{h}$', 'FluxC': '$F_C$'}
+
 
 def _print_scores(train_mean, train_std, cv_mean, cv_std):
-    print('\n+-------- FIT STATISTICS --------+')
     # TODO: use 95th percentile instead of stdev
-    print('\tTraining score =         %.4f +/- %.5f' % (train_mean, train_std))
-    print('\tCross-validation score = %.4f +/- %.5f' % (cv_mean, cv_std))
+    print('  - Train: %.4f +/- %.5f' % (train_mean, train_std))
+    print('  - CV:    %.4f +/- %.5f' % (cv_mean, cv_std))
 
 
 def print_cv_scores(cv_scores):
@@ -34,6 +36,5 @@ def print_search_scores(grid_search):
 def print_search_best_params(grid_search):
     """Takes a SearchCV model and prints out the optimal
     hyperparameters in a readable way"""
-    print('\n+----- OPTIMAL HYPERPARAMS ------+')
     for k, v in grid_search.best_params_.items():
-        print('\t%s = %s' % (k, v))
+        print('  - %s = %s' % (k, v))

@@ -2,7 +2,6 @@ import os
 
 from typing import List
 
-
 def get_dirs_in_directory(path: str) -> List[str]:
     """get all subdirectories in the given path (non-recursive)."""
     dirs = []

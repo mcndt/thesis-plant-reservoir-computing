@@ -27,10 +27,10 @@ class HydroShootExperiment:
         env_input_file = os.path.join(path, 'env_input.csv')
         plant_output_file = os.path.join(path, 'plant_outputs.csv')
         param_file = os.path.join(path, 'params.json')
-        self._load_states(state_file)
-        self._load_inputs(env_input_file)
-        self._load_outputs(plant_output_file)
         self._load_params(param_file)
+        self._load_outputs(plant_output_file)
+        self._load_inputs(env_input_file)
+        self._load_states(state_file)
 
     def _load_states(self, path: str):
         with open(path, 'rb') as file:
@@ -39,9 +39,16 @@ class HydroShootExperiment:
             self.states = ReservoirState(data)
 
     def _load_inputs(self, path: str):
+        # NOTE: requires outputs to be loaded first!
         env_input = pd.read_csv(path)
         env_input['time'] = pd.to_datetime(
             env_input['time'], format='%Y-%m-%d %H:%M:%S')
+        # start = experiment.params['simulation']['sdate']
+        # end = experiment.params['simulation']['edate']
+        start = self.outputs['time'].iloc[0]
+        end = self.outputs['time'].iloc[-1]
+        env_input = env_input[(start <= env_input['time'])
+                              & (env_input['time'] <= end)]
         self.inputs = env_input
 
     def _load_outputs(self, path: str):
@@ -58,11 +65,11 @@ class HydroShootExperiment:
 
     def get_input_variables(self) -> tuple:
         """Get the input keys available."""
-        return tuple(self.inputs.columns)
+        return tuple(self.inputs.loc[:, self.inputs.columns != 'time'].columns)
 
     def get_output_variables(self) -> tuple:
         """Get the input keys available."""
-        return tuple(self.outputs.columns)
+        return tuple(self.outputs.loc[:, self.outputs.columns != 'time'].columns)
 
     def get_targets(self) -> tuple:
         """Get the target keys available."""

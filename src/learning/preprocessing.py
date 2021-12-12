@@ -40,10 +40,13 @@ def preprocess_data(runs, state_var, target, state_size=32,
     # 1. Aggregate data from each experiment run (and each sample within the run, if samples_per_run > 1)
     data = []  # insert tuples of (state, target, group)
 
+    # choose a random subset of state variables to observe.
+    # Assumes the ordering is the same across all runs.
+    state_samples = np.random.choice(runs[0].state_size(), size=(
+        samples_per_run, state_size), replace=False)
+
     for i_group, run in enumerate(runs):
         # generate random sample of available leaves to observe
-        state_samples = np.random.choice(run.state_size(), size=(
-            samples_per_run, state_size), replace=False)
         state_data = run.states[state_var]
         y_i = run.get_target(target)
 

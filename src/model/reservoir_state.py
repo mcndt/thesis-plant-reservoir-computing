@@ -13,7 +13,8 @@ class ReservoirState:
         self._states = states
 
     def __getitem__(self, key) -> np.ndarray:
-        """Get a ndarray of the state history for a specific state variable
+        """Get a ndarray of the state history for a specific state variable.
+        State variables are ordered in ascending mtg vertex id.
           axis 0: nodes
           axis 1: steps"""
 
@@ -21,6 +22,11 @@ class ReservoirState:
         variable_nodes = self._states[key]
         for i, series in enumerate(variable_nodes.values()):
             data[:, i] = series
+
+        # reorder by node id
+        node_ids = list(variable_nodes.keys())
+        sort_key = np.argsort(node_ids)
+        data = data[:, sort_key]
         return data
 
     def get_variables(self):

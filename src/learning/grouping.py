@@ -12,3 +12,4 @@ def alternating_groups(X: np.ndarray, n_groups=2) -> np.ndarray:
     for i in range(n_groups):
         groups[i::n_groups] = i
     return groups.repeat(n_steps)
+

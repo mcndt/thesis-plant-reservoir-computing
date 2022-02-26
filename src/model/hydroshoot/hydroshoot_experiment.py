@@ -6,7 +6,7 @@ from pickle import load as pload
 import pandas as pd
 import numpy as np
 
-from src.model.reservoir_state import ReservoirState
+from src.model.hydroshoot.reservoir_state import ReservoirState
 from src.util import get_dirs_in_directory
 
 from typing import List

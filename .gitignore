@@ -52,3 +52,4 @@ docs/_build/
 **/output/
 **/results/
 notebooks/NEW_STORAGE/test_large.csv
+notebooks/datasets/

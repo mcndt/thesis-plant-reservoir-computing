@@ -22,7 +22,8 @@ def _print_search_best_params(grid_search):
 
 def get_cv_score(model: BaseEstimator, X, y, groups, folds, verbose=False) -> ModelScores:
     """Performs a cross-validated fit and returns both training 
-    and cross-validated scores as a tuple of (mean, std)"""
+    and cross-validated scores as a tuple of (mean, std). 
+    Uses NMSE for cross-validation scores."""
 
     cv_scores = cross_validate(model, X, y, groups=groups, cv=folds, scoring=nmse_scorer,
                                return_train_score=True, n_jobs=-1)
@@ -42,6 +43,7 @@ def get_cv_score(model: BaseEstimator, X, y, groups, folds, verbose=False) -> Mo
 def perform_gridsearch(model: BaseEstimator, X, y, groups, folds, param_grid, verbose=False) -> Tuple[GridSearchCV, ModelScores]:
     """Wraps the passed model into GridSearchCV and performs a grid search 
     using the passed parameter grid.
+    Uses NMSE for cross-validation scores.
 
     Returns a tuple of the fitted model wrapped into GridSearchCV 
     and the cross-validated scores after fit. 

@@ -20,7 +20,7 @@ class ExperimentDataset:
 
     def load_dataframe(self, csv_path):
         df = pd.read_csv(csv_path)
-        this.load_data(df)
+        self.load_data(df)
 
     def load_data(self, dataset_df):
         self._inputs = dataset_df[dataset_df["type"] == "INPUT"].dropna(

@@ -86,3 +86,14 @@ class ExperimentDataset:
 
         source = self._state.groupby("run_id").get_group(run_id)
         return source.pivot(index="time", columns=["state_id"], values=state_key)
+
+    def __repr__(self) -> str:
+        return (
+            f"Dataset properties:\n"
+            f"\tn_runs:     {self.n_runs():>3}\n"
+            f"\tn_steps:    {self.n_steps():>3}\n"
+            f"\tstate_size: {self.state_size():>3}\n"
+            f"\nAvailable targets: \n\t{', '.join(self.get_targets())}\n"
+            f"\nAvailable state variables: \n\t{', '.join(self.get_state_variables())}\n"
+        )
+

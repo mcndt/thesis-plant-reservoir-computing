@@ -11,6 +11,10 @@ class ExperimentDataset:
         self._outputs: pd.DataFrame = None
         self._state: pd.DataFrame = None
 
+        self._input_keys = None
+        self._output_keys = None
+        self._state_keys = None
+
         if dataset_df is not None:
             self.load_data(dataset_df)
         elif csv_path is not None:
@@ -37,15 +41,47 @@ class ExperimentDataset:
             self._outputs
         ), "Input and output set have different lengths."
 
+        input_col_names = self._inputs.columns
+        self._input_keys = tuple(
+            filter(lambda x: x.startswith("input_"), input_col_names)
+        )
+        output_col_names = self._outputs.columns
+        self._output_keys = tuple(
+            filter(lambda x: x.startswith("output_"), output_col_names)
+        )
+        state_col_names = self._state.loc[
+            :, ~self._state.columns.isin(["state_id", "state_type"])
+        ].columns
+        self._state_keys = tuple(
+            filter(lambda x: x.startswith("state_"), state_col_names)
+        )
+
+        self.cache_state()
+
+    def cache_state(self) -> tuple:
+        states = self._state
+        n_runs = self.n_runs()
+        n_steps = self.n_steps()
+        state_size = self.state_size()
+        state_vars = self.get_state_variables()
+        n_vars = len(state_vars)
+
+        self._state_nd = np.empty((n_runs, n_steps, state_size, n_vars))
+
+        node_ids = states["state_id"].unique()
+        node_map = {node_id: i for (i, node_id) in enumerate(node_ids)}
+        runs_df = states.groupby(["run_id", "state_id"])
+        for (i_run, i_node), run_df in runs_df:
+            for i_var, var in enumerate(state_vars):
+                self._state_nd[i_run, :, node_map[i_node], i_var] = run_df.loc[:, var]
+
     def get_input_variables(self) -> tuple:
         """Get the input keys available."""
-        input_col_names = self._inputs.columns
-        return tuple(filter(lambda x: x.startswith("input_"), input_col_names))
+        return self._input_keys
 
     def get_output_variables(self) -> tuple:
         """Get the input output available."""
-        output_col_names = self._outputs.columns
-        return tuple(filter(lambda x: x.startswith("output_"), output_col_names))
+        return self._output_keys
 
     def get_targets(self) -> tuple:
         """Get the target keys available."""
@@ -53,10 +89,7 @@ class ExperimentDataset:
 
     def get_state_variables(self) -> tuple:
         """Get the state variables available."""
-        state_col_names = self._state.loc[
-            :, ~self._state.columns.isin(["state_id", "state_type"])
-        ].columns
-        return tuple(filter(lambda x: x.startswith("state_"), state_col_names))
+        return self._state_keys
 
     def n_runs(self) -> int:
         return len(self._inputs.groupby("run_id"))
@@ -84,8 +117,10 @@ class ExperimentDataset:
             state_key in self.get_state_variables()
         ), f"{state_key} not in available state variables."
 
-        source = self._state.groupby("run_id").get_group(run_id)
-        return source.pivot(index="time", columns=["state_id"], values=state_key)
+        i_state = self.get_state_variables().index(state_key)
+        return self._state_nd[run_id, :, :, i_state]
+        # source = self._state.groupby("run_id").get_group(run_id)
+        # return source.pivot(index="time", columns=["state_id"], values=state_key)
 
     def __repr__(self) -> str:
         return (

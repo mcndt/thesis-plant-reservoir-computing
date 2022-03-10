@@ -1,4 +1,5 @@
 import sys, os
+import numpy as np
 
 sys.path.insert(1, os.path.join(sys.path[0], "../../"))
 from src.model.rc_dataset import ExperimentDataset
@@ -18,14 +19,26 @@ def direct_target_generator(dataset: ExperimentDataset, target: str, run_ids: [i
 
 
 def direct_reservoir_generator(
-    dataset: ExperimentDataset, state_var: str, run_ids: [int]
+    dataset: ExperimentDataset,
+    state_var: str,
+    run_ids: [int],
+    state_size=-1,
+    random_state=None,
 ):
-    """Returns a generator that generates the reservoir time 
-    series from the run id for a given state variable.."""
+    """Returns a function that generates the reservoir from the run id."""
     assert (
         state_var in dataset.get_state_variables()
     ), f"{state_var} not available in dataset."
 
+    if state_size > 0:
+        if random_state is not None:
+            np.random.seed(random_state)
+        state_choice = np.random.choice(
+            dataset.state_size(), size=state_size, replace=False
+        )
+    else:
+        state_choice = slice(0, dataset.state_size())
+
     for run_id in run_ids:
-        yield dataset.get_state(state_var, run_id)
+        yield dataset.get_state(state_var, run_id)[:, state_choice]
 

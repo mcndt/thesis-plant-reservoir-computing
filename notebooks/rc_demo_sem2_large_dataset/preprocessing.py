@@ -12,28 +12,35 @@ def preprocess_data(
     run_ids,
     target_generator,
     reservoir_generator,
-    state_size=32,
+    state_size,
     warmup_steps=0,
     day_mask=None,
 ):
-    # 1. Take a random subsample of observation nodes
-    state_choice = np.random.choice(
-        dataset.state_size(), size=state_size, replace=False
-    )
+    """
+    Preprocessing performed: 
 
-    # 2. Cast target and reservoir state into NumPy ndarrays.
+    1. The target signal for each run is computed.
+        - Target and reservoir are cast into a ndarray.
+    2. Target and reservoir signals are trimmed.
+        - A warmup mask is applied to target and reservoir.
+        - A night-time mask is applied to target and reservoir.
+    3. Target and reservoir are rescaled to zero-mean and unit variance
+        - Normalizing transform is fitted on the entire dataset of included experiment runs.
+    """
+
+    # 1. Cast target and reservoir state into NumPy ndarrays.
     X = np.empty(
         (len(run_ids), dataset.n_steps(), state_size)
     )  # shape (runs, time_steps, nodes)
     y = np.empty((len(run_ids), dataset.n_steps()))  # shape (runs, time_steps)
 
     for i_run, run_state in enumerate(reservoir_generator):
-        X[i_run, :, :] = run_state[:, state_choice]
+        X[i_run, :, :] = run_state
 
     for i_run, run_target in enumerate(target_generator):
         y[i_run, :] = run_target
 
-    # 3. Masks are applied.
+    # 2. Masks are applied.
     if day_mask is None:
         time_mask = np.ones(X.shape[1], dtype=bool)
     else:
@@ -47,7 +54,7 @@ def preprocess_data(
     X = X[:, time_mask, :]
     y = y[:, time_mask]
 
-    # 4. Normalize target and reservoir states
+    # 3. Normalize target and reservoir states
     X = (X - X.mean()) / X.std()
     y = (y - y.mean()) / y.std()
 

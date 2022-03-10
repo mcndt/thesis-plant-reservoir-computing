@@ -2,8 +2,17 @@ import numpy as np
 
 
 def group_by_day(X: np.ndarray, days_per_run, offset_between_runs=1) -> np.ndarray:
-    """Generates an array of group indices for state X.
-    - Shape of X is assumed to be (runs, time_steps, nodes)
+    """Simulation state from the same calendar day of simulation inputs, 
+    across all runs, are grouped together per day. Shape of X is assumed to be (runs, time_steps, nodes)
+
+    ```
+    GROUP 1 | GROUP 2 | GROUP 3 | GROUP 4 | ...
+    --------+---------+---------+---------+----
+    sim1/d1  sim1/d2   sim1/d3   /         /
+    /        sim2/d2   sim2/d3   sim2/d4   /       ...
+    /        /         sim3/d3   sim3/d4   sim3/d5 
+                                ...                ...
+    ```
     """
     n_runs, n_steps, n_nodes = X.shape
     assert (
@@ -32,9 +41,11 @@ def train_test_split_blocks(X, y, groups, test_ratio=0.25, interval_length=16):
     e.g. for `interval_length = 8` and `test_ratio = 0.25`, 
     the consecutive groups are assigned as follows:
 
+    ```
     g1     g2      g3      g4      g5      g6      g7     g8                   
     ------+-------+-------+-------+-------+-------+------+------+
     Train | Train | Train | Train | Train | Train | Test | Test | ... (repeat)
+    ```
     """
     X_flat = X.reshape((-1, X.shape[-1]))
     y_flat = y.reshape((-1))
@@ -42,14 +53,14 @@ def train_test_split_blocks(X, y, groups, test_ratio=0.25, interval_length=16):
 
     group_ids = np.unique(groups_flat)
 
-    test_run_length = np.ceil(INTERVAL_LENGTH * TEST_RATIO).astype(int)
-    train_run_length = INTERVAL_LENGTH - test_run_length
+    test_run_length = np.ceil(interval_length * test_ratio).astype(int)
+    train_run_length = interval_length - test_run_length
 
-    split_mask = np.empty((INTERVAL_LENGTH), dtype=bool)
+    split_mask = np.empty((interval_length), dtype=bool)
     split_mask[0:train_run_length] = True
-    split_mask[train_run_length:INTERVAL_LENGTH] = False
+    split_mask[train_run_length:interval_length] = False
     split_mask = np.tile(
-        split_mask, np.ceil(len(group_ids) / INTERVAL_LENGTH).astype(int)
+        split_mask, np.ceil(len(group_ids) / interval_length).astype(int)
     )[: len(group_ids)]
 
     groups_train = group_ids[split_mask]

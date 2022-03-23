@@ -11,9 +11,22 @@ class ExperimentDataset:
         self._outputs: pd.DataFrame = None
         self._state: pd.DataFrame = None
 
+        # Stores the names of the input targets
         self._input_keys = None
+        # Store the names of the output targets
         self._output_keys = None
+        # Stores the names of the available state variables.
         self._state_keys = None
+        # Stores the names of the available experiment runs.
+        self._run_keys = None
+        # Stores the names of the available state nodes.
+        # NOTE: Not every node necessarily contains every state variable
+        #       (e.g. one node can be a leaf while the other is a stem).
+        self.state_keys = None
+
+        self._run_map = None
+        self._node_map = None
+        self._state_nd = None
 
         if dataset_df is not None:
             self.load_data(dataset_df)
@@ -56,6 +69,15 @@ class ExperimentDataset:
             filter(lambda x: x.startswith("state_"), state_col_names)
         )
 
+        self._run_keys = self._inputs["run_id"].unique()
+        self._run_map = {run_id: i for i, run_id in enumerate(self.get_run_ids())}
+
+        self.state_keys = (
+            self._state["state_id"].apply(str) + "__" + self._state["state_type"]
+        ).unique()
+
+        self._node_map = {node_id: i for i, node_id in enumerate(self.state_keys)}
+
         self.cache_state()
 
     def cache_state(self) -> tuple:
@@ -68,12 +90,17 @@ class ExperimentDataset:
 
         self._state_nd = np.empty((n_runs, n_steps, state_size, n_vars))
 
-        node_ids = states["state_id"].unique()
-        node_map = {node_id: i for (i, node_id) in enumerate(node_ids)}
-        runs_df = states.groupby(["run_id", "state_id"])
-        for (i_run, i_node), run_df in runs_df:
+        # node_ids = states["state_id"].unique()
+        # node_map = {node_id: i for (i, node_id) in enumerate(node_ids)}
+
+        runs_df = states.groupby(["run_id", "state_id", "state_type"])
+        for (run_id, state_id, state_type), run_df in runs_df:
+
+            i_run = self._run_map[run_id]
+            i_node = self._node_map[f"{state_id}__{state_type}"]
+
             for i_var, var in enumerate(state_vars):
-                self._state_nd[i_run, :, node_map[i_node], i_var] = run_df.loc[:, var]
+                self._state_nd[i_run, :, i_node, i_var] = run_df.loc[:, var]
 
     def get_input_variables(self) -> tuple:
         """Get the input keys available."""
@@ -91,6 +118,10 @@ class ExperimentDataset:
         """Get the state variables available."""
         return self._state_keys
 
+    def get_run_ids(self) -> tuple:
+        """Get the ids of the experiment runs in the dataset."""
+        return self._run_keys
+
     def n_runs(self) -> int:
         return len(self._inputs.groupby("run_id"))
 
@@ -98,7 +129,7 @@ class ExperimentDataset:
         return self._inputs.groupby("run_id").size()[0]
 
     def state_size(self) -> int:
-        return len(self._state.groupby("state_id"))
+        return len(self.state_keys)
 
     def get_target(self, target_key, run_id) -> pd.Series:
         "Get a target signal as pandas Series by the target key."
@@ -117,10 +148,10 @@ class ExperimentDataset:
             state_key in self.get_state_variables()
         ), f"{state_key} not in available state variables."
 
+        i_run = self._run_map[run_id]
         i_state = self.get_state_variables().index(state_key)
-        return self._state_nd[run_id, :, :, i_state]
-        # source = self._state.groupby("run_id").get_group(run_id)
-        # return source.pivot(index="time", columns=["state_id"], values=state_key)
+
+        return self._state_nd[i_run, :, :, i_state]
 
     def __repr__(self) -> str:
         return (
@@ -131,4 +162,3 @@ class ExperimentDataset:
             f"\nAvailable targets: \n\t{', '.join(self.get_targets())}\n"
             f"\nAvailable state variables: \n\t{', '.join(self.get_state_variables())}\n"
         )
-

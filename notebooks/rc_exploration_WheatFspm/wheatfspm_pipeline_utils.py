@@ -5,6 +5,8 @@ This file contains functions to be used with RC pipelines for the WheatFspm plan
 import warnings
 import numpy as np
 
+from model_config import max_time_step
+
 
 def direct_target_generator(dataset, target: str, run_id):
     """Returns a generator that generates the target from the run id."""
@@ -53,12 +55,12 @@ def preprocess_data(dataset, target, reservoir, warmup_steps=0, day_mask=None):
         time_mask = np.ones(X.shape[1], dtype=bool)
     else:
         n_days = X.shape[1] // len(day_mask)
-        try:
-            assert (
-                dataset.n_steps() % len(day_mask) == 0
-            ), "Dataset time steps must be multiple of day mask."
-        except:
-            warnings.warn("Dataset time steps is not a multiple of day mask!")
+        # try:
+        #     assert (
+        #         dataset.n_steps() % len(day_mask) == 0
+        #     ), "Dataset time steps must be multiple of day mask."
+        # except:
+        #     warnings.warn("Dataset time steps is not a multiple of day mask!")
         time_mask = np.tile(day_mask, n_days)
 
     time_mask[:warmup_steps] = False
@@ -68,6 +70,34 @@ def preprocess_data(dataset, target, reservoir, warmup_steps=0, day_mask=None):
     # 4. Normalize target and reservoir states
     X = (X - X.mean()) / X.std()
     y = (y - y.mean()) / y.std()
+
+    return X, y
+
+
+def preprocess_raw_X(X_raw, warmup_steps=0, day_mask=None):
+    X = X_raw
+    # 3. Masks are applied.
+    if day_mask is None:
+        time_mask = np.ones(X.shape[0], dtype=bool)
+    else:
+        n_days = X.shape[0] // len(day_mask)
+        # try:
+        #     assert (
+        #         dataset.n_steps() % len(day_mask) == 0
+        #     ), "Dataset time steps must be multiple of day mask."
+        # except:
+        #     warnings.warn("Dataset time steps is not a multiple of day mask!")
+        time_mask = np.tile(day_mask, n_days)
+
+    time_mask[:warmup_steps] = False
+    X = X[: len(time_mask)][time_mask, :]
+    # y = y[:, time_mask]
+
+    # 4. Normalize target and reservoir states
+    X = (X - X.mean()) / X.std()
+    # y = (y - y.mean()) / y.std()
+
+    return X
 
 
 def group_by_day(X: np.ndarray, day_mask: np.ndarray) -> np.ndarray:

@@ -12,5 +12,8 @@
     "**/*.pyc": {"when": "$(basename).py"}, 
     "**/__pycache__": true
   },
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.tabSize": 2
+  }
 }

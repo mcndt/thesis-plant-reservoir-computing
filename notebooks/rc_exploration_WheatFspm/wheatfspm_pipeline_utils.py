@@ -23,8 +23,12 @@ def direct_reservoir_generator(dataset, state_var: str, run_id):
     state = dataset.get_state(state_var, run_id)[: max_time_step[run_id]]
 
     state_NaN = np.isnan(state)
-    state_col_idx = np.all(state_NaN, axis=0)
-    state = state[:, ~state_col_idx]
+    NaN_idx = np.any(state_NaN, axis=0)
+
+    state_null = np.isclose(state, 0)
+    null_idx = np.all(state_null, axis=0)
+
+    state = state[:, ~NaN_idx & ~null_idx]
 
     yield state
 

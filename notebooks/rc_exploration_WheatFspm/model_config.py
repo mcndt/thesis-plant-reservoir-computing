@@ -6,7 +6,7 @@ of the WheatFspm dataset are to be used for reservoir computing experiments.
 hydroshoot_inputs = (
     "input_air_temperature",
     "input_humidity",
-    "input_Wind",
+    # "input_Wind",  # bad target because it only provides a new record every 24h
     "input_PARi",
 )
 

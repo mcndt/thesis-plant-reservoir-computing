@@ -49,5 +49,9 @@ targets = [*input_targets, *output_targets]
 state_variables = [*hydroshoot_state, *exclusive_state]
 
 
-max_time_step = {"NEMA_H0": 696, "NEMA_H3": 864, "NEMA_H15": 912}
+max_time_step = {
+    "NEMA_H0": 696,  # originally 696
+    "NEMA_H3": 864 - 24,  # originally 864
+    "NEMA_H15": 912 - 24,  # originally 912
+}
 

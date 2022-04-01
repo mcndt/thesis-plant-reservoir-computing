@@ -112,15 +112,23 @@ def group_by_day(X: np.ndarray, day_mask: np.ndarray) -> np.ndarray:
     return groups
 
 
-def train_test_split_alternating(X, y, groups, ratio=1):
+def train_test_split_alternating(X, y, groups, ratio=1, blocks=1):
     """The ratio parameter determines how many training days 
   are included for every test day.
   
   e.g. if ratio=2, then the train-test ratio is 2:1
   """
     group_ids = np.unique(groups)
-    test_group_ids = group_ids[ratio :: ratio + 1]
-    train_mask = ~np.isin(groups, test_group_ids)
+
+    train_groups_mask = np.ones((ratio + 1), dtype=bool)
+    train_groups_mask[-1] = False
+    train_groups_mask = np.repeat(train_groups_mask, blocks)
+    train_groups_mask = np.tile(
+        train_groups_mask, np.ceil(len(group_ids) / len(train_groups_mask)).astype(int)
+    )
+    train_groups_mask = train_groups_mask[: len(group_ids)]
+    train_group_ids = group_ids[train_groups_mask]
+    train_mask = np.isin(groups, train_group_ids)
 
     X_train = X[train_mask]
     groups_train = groups[train_mask]

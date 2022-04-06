@@ -1,5 +1,11 @@
+import sys, os
+
 import numpy as np
 import pandas as pd
+
+
+sys.path.insert(1, os.path.join(sys.path[0], "../../"))
+from src.model.rc_dataset import ExperimentDataset
 
 
 def get_state_random_subset(state: pd.DataFrame, state_size: int) -> pd.DataFrame:

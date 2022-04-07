@@ -1,11 +1,9 @@
 """
 This file contains functions to be used with RC pipelines for the WheatFspm plant model.
 """
-
-import warnings
 import numpy as np
 
-from model_config import max_time_step
+from model_config import max_time_step, baseline_reservoirs
 
 
 def direct_target_generator(dataset, target: str, run_id):
@@ -33,7 +31,120 @@ def direct_reservoir_generator(dataset, state_var: str, run_id):
     yield state
 
 
-def preprocess_data(dataset, target, reservoir, warmup_steps=0, day_mask=None):
+def generate_X_y_groups_baseline(
+    *,
+    datasets,
+    target,
+    env_targets,
+    prefix,
+    target_generator,
+    warmup_steps,
+    day_mask,
+    combined_only=False,
+):
+    data = {}
+
+    def _preprocess_data(target_data, reservoir_data):
+        X_raw, y_raw = preprocess_data(
+            target_data, reservoir_data, warmup_steps, day_mask, skip_normalize=True
+        )
+        X, y = X_raw[0, :, :], y_raw[0, :]
+        X = (X - X.mean(axis=0)) / X.std(axis=0)
+        y = (y - y.mean()) / y.std()
+        groups = group_by_day(X, day_mask)
+        return X, y, groups
+
+    def create_reservoir_from_targets(targets, run_name):
+        target_data_list = [
+            next(direct_target_generator(dataset, _target, run_name))
+            for _target in targets
+        ]
+        target_data_nd = np.array(target_data_list).T
+        return target_data_nd
+
+    # Preprocess the data for each dataset
+    for name, dataset in datasets:
+        target_data = next(target_generator(dataset, target, name))
+        reservoir_data = create_reservoir_from_targets(env_targets, name)
+        X, y, groups = _preprocess_data(target_data, reservoir_data)
+        data[f"{name}_{prefix}"] = (X, y, groups)
+
+    # Generate the concatenated dataset
+    all_arrays = list(data.values())
+    X_combined = np.concatenate(list(map(lambda x: x[0], all_arrays)))
+    y_combined = np.concatenate(list(map(lambda x: x[1], all_arrays)))
+    groups_combined = np.concatenate(list(map(lambda x: x[2], all_arrays)))
+    data[f"combined_{prefix}"] = (X_combined, y_combined, groups_combined)
+    if combined_only:
+        data = {k: v for k, v in data.items() if k.startswith("combined")}
+
+    return data
+
+
+def generate_X_y_groups(
+    *,
+    datasets,
+    target,
+    state_var,
+    target_generator,
+    state_generator,
+    warmup_steps,
+    day_mask,
+    combined_only=False,
+    add_env=False,
+):
+    """Generates X, y and groups arrays for each dataset, plus a concatenated dataset.
+    NOTE: The groups in the concatenated dataset are such that the same calendar day is in the same group.
+
+    Also generates a baseline dataset where the reservoir is just a combination of all environmental inputs.
+    """
+    data = {}
+
+    def _preprocess_data(target_data, reservoir_data):
+        X_raw, y_raw = preprocess_data(
+            target_data, reservoir_data, warmup_steps, day_mask
+        )
+        X, y = X_raw[0, :, :], y_raw[0, :]
+        groups = group_by_day(X, day_mask)
+        return X, y, groups
+
+    # Preprocess the data for each dataset
+    for name, dataset in datasets:
+        target_data = next(target_generator(dataset, target, name))
+        reservoir_data = next(state_generator(dataset, state_var, name))
+        X, y, groups = _preprocess_data(target_data, reservoir_data)
+        data[name] = (X, y, groups)
+
+    # Generate the concatenated dataset
+    all_arrays = list(data.values())
+    X_combined = np.concatenate(list(map(lambda x: x[0], all_arrays)))
+    y_combined = np.concatenate(list(map(lambda x: x[1], all_arrays)))
+    groups_combined = np.concatenate(list(map(lambda x: x[2], all_arrays)))
+    data["combined"] = (X_combined, y_combined, groups_combined)
+    if combined_only:
+        data = {k: v for k, v in data.items() if k.startswith("combined")}
+
+    # Add environmental baselines
+    if add_env:
+        for prefix, env_targets in baseline_reservoirs:
+            env_data = generate_X_y_groups_baseline(
+                datasets=datasets,
+                target=target,
+                env_targets=env_targets,
+                prefix=prefix,
+                target_generator=target_generator,
+                warmup_steps=warmup_steps,
+                day_mask=day_mask,
+                combined_only=combined_only,
+            )
+            data = {**data, **env_data}
+
+    return data
+
+
+def preprocess_data(
+    target, reservoir, warmup_steps=0, day_mask=None, skip_normalize=False
+):
     """
     Preprocessing performed:
 
@@ -72,8 +183,9 @@ def preprocess_data(dataset, target, reservoir, warmup_steps=0, day_mask=None):
     y = y[:, time_mask]
 
     # 4. Normalize target and reservoir states
-    X = (X - X.mean()) / X.std()
-    y = (y - y.mean()) / y.std()
+    if not skip_normalize:
+        X = (X - X.mean()) / X.std()
+        y = (y - y.mean()) / y.std()
 
     return X, y
 
@@ -113,11 +225,11 @@ def group_by_day(X: np.ndarray, day_mask: np.ndarray) -> np.ndarray:
 
 
 def train_test_split_alternating(X, y, groups, ratio=1, blocks=1):
-    """The ratio parameter determines how many training days 
-  are included for every test day.
-  
-  e.g. if ratio=2, then the train-test ratio is 2:1
-  """
+    """The ratio parameter determines how many training days
+    are included for every test day.
+
+    e.g. if ratio=2, then the train-test ratio is 2:1
+    """
     group_ids = np.unique(groups)
 
     train_groups_mask = np.ones((ratio + 1), dtype=bool)
@@ -139,4 +251,3 @@ def train_test_split_alternating(X, y, groups, ratio=1, blocks=1):
     groups_test = groups[~train_mask]
 
     return (X_train, y_train, groups_train), (X_test, y_test, groups_test)
-

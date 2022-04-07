@@ -55,3 +55,11 @@ max_time_step = {
     "NEMA_H15": 912 - 24,  # originally 912
 }
 
+
+baseline_reservoirs = [
+    (
+        "env_reservoir",
+        ["input_air_temperature", "input_humidity", "input_PARi"],
+    ),
+    ("env_temp_only", ["input_air_temperature"]),
+]

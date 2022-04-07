@@ -57,9 +57,10 @@ max_time_step = {
 
 
 baseline_reservoirs = [
-    (
-        "env_res",
-        ["input_air_temperature", "input_humidity", "input_PARi"],
-    ),
+    ("env_res", ["input_air_temperature", "input_humidity", "input_PARi"],),
     ("env_temp_only", ["input_air_temperature"]),
+]
+
+heterogeneous_reservoirs = [
+    ("state__het_all", (*state_variables,)),
 ]

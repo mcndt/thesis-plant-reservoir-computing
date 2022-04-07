@@ -80,6 +80,45 @@ def generate_X_y_groups_baseline(
 
     return data
 
+def generate_X_y_groups_heterogeneous(
+    *,
+    datasets,
+    target,
+    state_vars,
+    target_generator,
+    state_generator,
+    warmup_steps,
+    day_mask,
+    combined_only=False,
+):
+    data = {}
+
+    def _preprocess_data(target_data, reservoir_data):
+        X_raw, y_raw = preprocess_data(
+            target_data, reservoir_data, warmup_steps, day_mask
+        )
+        X, y = X_raw[0, :, :], y_raw[0, :]
+        groups = group_by_day(X, day_mask)
+        return X, y, groups
+
+    # Preprocess the data for each dataset
+    for name, dataset in datasets:
+        target_data = next(target_generator(dataset, target, name))
+        reservoir_data = next(state_generator(dataset, state_var, name))
+        X, y, groups = _preprocess_data(target_data, reservoir_data)
+        data[name] = (X, y, groups)
+
+    # Generate the concatenated dataset
+    all_arrays = list(data.values())
+    X_combined = np.concatenate(list(map(lambda x: x[0], all_arrays)))
+    y_combined = np.concatenate(list(map(lambda x: x[1], all_arrays)))
+    groups_combined = np.concatenate(list(map(lambda x: x[2], all_arrays)))
+    data["combined"] = (X_combined, y_combined, groups_combined)
+    if combined_only:
+        data = {k: v for k, v in data.items() if k.startswith("combined")}
+
+    return data
+
 
 def generate_X_y_groups(
     *,

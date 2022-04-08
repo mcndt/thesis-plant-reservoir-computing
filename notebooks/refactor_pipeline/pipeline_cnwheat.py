@@ -1,7 +1,7 @@
 import sys, os
 import numpy as np
 
-from typing import List
+from typing import List, Tuple
 
 sys.path.insert(1, os.path.join(sys.path[0], "../../"))
 from src.model.rc_dataset import ExperimentDataset
@@ -10,8 +10,14 @@ from pipeline_base import (
     BaseTargetGenerator,
     BaseReservoirGenerator,
     BaseGroupGenerator,
+    Preprocessor,
 )
 from model_config_cnwheat import max_time_step
+
+
+#########################
+###  Data generators  ###
+#########################
 
 
 class TargetGenerator(BaseTargetGenerator):
@@ -135,3 +141,38 @@ class GroupGenerator(BaseGroupGenerator):
         groups = groups.reshape((1, -1))
         return groups
 
+
+############################
+###  Data preprocessing  ###
+############################
+
+
+class GroupRescale(Preprocessor):
+    "Rescale features based on the mean and std of the feature group they belong to."
+
+    def __init__(
+        self, *, datasets: List[ExperimentDataset], state_vars: List[str],
+    ):
+        group_slices, n_features = self._get_groups(datasets, state_vars)
+        self._group_slices = group_slices
+        self._n_expected_features = n_features
+
+    def _get_groups(self, datasets, state_vars) -> List[slice]:
+        group_slices = []
+        offset = 0
+        for var in state_vars:
+            res_generator = SingleReservoirGenerator(state_var=var)
+            X_raw = res_generator.transform(datasets, warmup_days=0)
+            group_size = X_raw.shape[-1]
+            group_slices.append(slice(offset, offset + group_size))
+            offset += group_size
+        return group_slices, offset
+
+    def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        for group_idx in self._group_slices:
+            X_g = X[:, group_idx]
+            X_g = (X_g - X_g.mean()) / X_g.std()
+            X[:, group_idx] = X_g
+
+        y = (y - y.mean()) / y.std()
+        return X, y, groups

@@ -87,10 +87,10 @@ class DirectReservoir(ReservoirTransformer):
 
 def flatten(X_tf, y_tf, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     assert X_tf.shape[:2] == y_tf.shape == groups.shape
-    _, n_samples, n_features = X_tf.shape
+    n_runs, n_samples, n_features = X_tf.shape
     X = X_tf.reshape((-1, n_features))
-    y = y_tf.reshape((n_samples))
-    groups = groups.reshape((n_samples))
+    y = y_tf.reshape((n_runs * n_samples))
+    groups = groups.reshape((n_runs * n_samples))
     return X, y, groups
 
 
@@ -125,8 +125,6 @@ class Rescale(Preprocessor):
             X = (X - X.mean()) / X.std()
         y = (y - y.mean()) / y.std()
         return X, y, groups
-
-
 
 
 #######################################

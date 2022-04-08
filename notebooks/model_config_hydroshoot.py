@@ -33,3 +33,14 @@ state_variables = [
     "state_u",
 ]
 
+baseline_reservoirs = [
+    (
+        "env_res",
+        ["input_Tac", "input_u", "input_hs", "input_Rg"],
+    ),
+    ("env_temp_only", ["input_Tac"]),
+]
+
+heterogeneous_reservoirs = [
+    ("state__het_all", (*state_variables,)),
+]

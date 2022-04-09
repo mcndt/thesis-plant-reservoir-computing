@@ -48,36 +48,20 @@ class BaseGroupGenerator(ABC):
         pass
 
 
-##############################
-###  Target transformers  ####
-##############################
+########################################
+###  Target/Reservoir transformers  ####
+########################################
 
 
-class TargetTransformer(ABC):
+class BaseTransformer(ABC):
     @abstractmethod
-    def transform(self, y_raw: np.ndarray) -> np.ndarray:
+    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
         pass
 
 
-class DirectTarget(TargetTransformer):
-    def transform(self, y_raw: np.ndarray) -> np.ndarray:
-        return y_raw
-
-
-################################
-###  Reservoir transformers  ###
-################################
-
-
-class ReservoirTransformer(ABC):
-    @abstractmethod
-    def transform(self, X_raw: np.ndarray) -> np.ndarray:
-        pass
-
-
-class DirectReservoir(ReservoirTransformer):
-    def transform(self, X_raw: np.ndarray) -> np.ndarray:
-        return X_raw
+class DirectTransform(BaseTransformer):
+    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+        return X, y, groups
 
 
 ############################
@@ -194,8 +178,7 @@ class RCPipeline:
 
     # Data transformation
     warmup_days: int
-    target_tf: TargetTransformer
-    reservoir_tf: ReservoirTransformer
+    transforms: List[BaseTransformer]
 
     # Data preproccessing
     preprocessing: List[Preprocessor]
@@ -238,9 +221,10 @@ def execute_pipeline(pipeline: RCPipeline):
     )
 
     # Data transformation
-    X_tf = pipeline.reservoir_tf.transform(X_raw)
-    y_tf = pipeline.target_tf.transform(y_raw)
-    X, y, groups = flatten(X_tf, y_tf, groups_raw)
+    X_tf, y_tf, groups_tf = X_raw, y_raw, groups_raw
+    for transform in pipeline.transforms:
+        X_tf, y_tf, groups_tf = transform.transform(X_tf, y_tf, groups_tf)
+    X, y, groups = flatten(X_tf, y_tf, groups_tf)
 
     # Data processing
     for processor in pipeline.preprocessing:

@@ -22,18 +22,14 @@ from src.learning.preprocessing import generate_mask
 
 class BaseTargetGenerator(ABC):
     @abstractmethod
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: [ExperimentDataset]) -> np.ndarray:
         """Returns shape (sim_runs, time_steps)"""
         pass
 
 
 class BaseReservoirGenerator(ABC):
     @abstractmethod
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: [ExperimentDataset]) -> np.ndarray:
         pass
 
 
@@ -42,9 +38,7 @@ class BaseGroupGenerator(ABC):
         self.day_length = day_length
 
     @abstractmethod
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: [ExperimentDataset]) -> np.ndarray:
         pass
 
 
@@ -62,6 +56,17 @@ class BaseTransformer(ABC):
 class DirectTransform(BaseTransformer):
     def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
         return X, y, groups
+
+
+class WarmupTransform(BaseTransformer):
+    def __init__(self, *, warmup_days: int, day_length: int):
+        self.warmup_steps = warmup_days * day_length
+
+    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+        X_tf = X[:, self.warmup_steps :]
+        y_tf = y[:, self.warmup_steps :]
+        groups_tf = groups[:, self.warmup_steps :]
+        return X_tf, y_tf, groups_tf
 
 
 class DelayLineTransform(BaseTransformer):
@@ -210,7 +215,6 @@ class RCPipeline:
     groups: BaseGroupGenerator
 
     # Data transformation
-    warmup_days: int
     transforms: List[BaseTransformer]
 
     # Data preproccessing
@@ -243,20 +247,15 @@ def fit_model(model, X, y, groups, folds, search_grid) -> BaseEstimator:
 def execute_pipeline(pipeline: RCPipeline):
 
     # Data generation
-    X_raw = pipeline.reservoir.transform(
-        pipeline.datasets, warmup_days=pipeline.warmup_days
-    )
-    y_raw = pipeline.target.transform(
-        pipeline.datasets, warmup_days=pipeline.warmup_days
-    )
-    groups_raw = pipeline.groups.transform(
-        pipeline.datasets, warmup_days=pipeline.warmup_days
-    )
+    X_raw = pipeline.reservoir.transform(pipeline.datasets)
+    y_raw = pipeline.target.transform(pipeline.datasets)
+    groups_raw = pipeline.groups.transform(pipeline.datasets)
 
     # Data transformation
     X_tf, y_tf, groups_tf = X_raw, y_raw, groups_raw
     for transform in pipeline.transforms:
         X_tf, y_tf, groups_tf = transform.transform(X_tf, y_tf, groups_tf)
+
     X, y, groups = flatten(X_tf, y_tf, groups_tf)
 
     # Data processing

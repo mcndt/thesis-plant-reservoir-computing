@@ -25,9 +25,7 @@ class TargetGenerator(BaseTargetGenerator):
         self.target = target
         self.run_ids = run_ids
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         assert len(datasets) == 1, "HydroShoot only uses single datasets."
         dataset = datasets[0]
         assert (
@@ -38,7 +36,6 @@ class TargetGenerator(BaseTargetGenerator):
 
         for run_id in self.run_ids:
             y_run = dataset.get_target(self.target, run_id).to_numpy()
-            y_run = y_run[24 * warmup_days :]
             y_run = y_run.reshape((1, -1))
             if y is None:
                 y = y_run
@@ -56,9 +53,7 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
         self.run_ids = run_ids
         self.state_ids = state_ids
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         assert len(datasets) == 1, "HydroShoot only uses single datasets."
         dataset = datasets[0]
         assert (
@@ -71,7 +66,6 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
         X = None
         for run_id in self.run_ids:
             X_run = dataset.get_state(self.state_var, run_id)[:, self.state_ids]
-            X_run = X_run[24 * warmup_days :]
 
             # Filter out NaN and zero series
             X_NaN = np.isnan(X_run)
@@ -99,15 +93,13 @@ class MultiReservoirGenerator(BaseReservoirGenerator):
         self.run_ids = run_ids
         self.state_ids = state_ids
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
         for state_var in self.state_vars:
             reservoir_generator = SingleReservoirGenerator(
                 state_var=state_var, run_ids=self.run_ids, state_ids=self.state_ids
             )
-            X_raw_var = reservoir_generator.transform(datasets, warmup_days=warmup_days)
+            X_raw_var = reservoir_generator.transform(datasets)
             if X is None:
                 X = X_raw_var
             else:
@@ -120,13 +112,11 @@ class TargetReservoirGenerator(BaseReservoirGenerator):
         self.targets = targets
         self.run_ids = run_ids
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
         for target in self.targets:
             target_generator = TargetGenerator(target=target, run_ids=self.run_ids)
-            X_target = target_generator.transform(datasets, warmup_days=warmup_days)
+            X_target = target_generator.transform(datasets)
             X_target = X_target.reshape((*X_target.shape, 1))
             if X is None:
                 X = X_target
@@ -141,15 +131,13 @@ class GroupGenerator(BaseGroupGenerator):
         self.run_ids = run_ids
         self.days_between_runs = days_between_runs
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         assert len(datasets) == 1, "HydroShoot only uses single datasets."
         dataset = datasets[0]
         n_steps = dataset.n_steps()
         assert n_steps % self.day_length == 0, "steps must be multiple of day length"
 
-        n_days = (n_steps // self.day_length) - warmup_days
+        n_days = n_steps // self.day_length
 
         groups = np.empty((len(self.run_ids), n_days * self.day_length))
         offset = 0
@@ -188,7 +176,7 @@ class GroupRescale(Preprocessor):
             res_generator = SingleReservoirGenerator(
                 state_var=var, run_ids=[0], state_ids=state_ids
             )
-            X_raw = res_generator.transform(datasets, warmup_days=0)
+            X_raw = res_generator.transform(datasets)
             group_size = X_raw.shape[-1]
             group_slices.append(slice(offset, offset + group_size))
             offset += group_size

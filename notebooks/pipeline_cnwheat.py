@@ -26,9 +26,7 @@ class TargetGenerator(BaseTargetGenerator):
     def __init__(self, *, target: str):
         self.target = target
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         y = np.empty((1, 0))
 
         for dataset in datasets:
@@ -38,7 +36,6 @@ class TargetGenerator(BaseTargetGenerator):
             run_id = dataset.get_run_ids()[0]
             y_dataset = dataset.get_target(self.target, run_id).to_numpy()
             y_dataset = y_dataset[: max_time_step[run_id]]
-            y_dataset = y_dataset[24 * warmup_days :]
             y_dataset = y_dataset.reshape((1, -1))
             y = np.concatenate((y, y_dataset), axis=1)
 
@@ -49,9 +46,7 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
     def __init__(self, *, state_var: str):
         self.state_var = state_var
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
 
         for dataset in datasets:
@@ -61,7 +56,6 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
             run_id = dataset.get_run_ids()[0]
             X_dataset = dataset.get_state(self.state_var, run_id)
             X_dataset = X_dataset[: max_time_step[run_id]]
-            X_dataset = X_dataset[24 * warmup_days :]
 
             # Filter out NaN and zero series
             X_NaN = np.isnan(X_dataset)
@@ -84,13 +78,11 @@ class MultiReservoirGenerator(BaseReservoirGenerator):
     def __init__(self, *, state_vars: List[str]):
         self.state_vars = state_vars
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
         for state_var in self.state_vars:
             reservoir_generator = SingleReservoirGenerator(state_var=state_var)
-            X_raw_var = reservoir_generator.transform(datasets, warmup_days=warmup_days)
+            X_raw_var = reservoir_generator.transform(datasets)
             if X is None:
                 X = X_raw_var
             else:
@@ -102,13 +94,11 @@ class TargetReservoirGenerator(BaseReservoirGenerator):
     def __init__(self, *, targets: List[str]):
         self.targets = targets
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
         for target in self.targets:
             target_generator = TargetGenerator(target=target)
-            X_raw_target = target_generator.transform(datasets, warmup_days=warmup_days)
+            X_raw_target = target_generator.transform(datasets)
             X_raw_target = X_raw_target.reshape((*X_raw_target.shape, 1))
             if X is None:
                 X = X_raw_target
@@ -121,18 +111,16 @@ class GroupGenerator(BaseGroupGenerator):
     def __init__(self, *, day_length: int):
         self.day_length = day_length
 
-    def transform(
-        self, datasets: List[ExperimentDataset], *, warmup_days: int
-    ) -> np.ndarray:
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         groups = np.empty((1, 0))
         for dataset in datasets:
-            groups_dataset = self._dataset_group_by_day(dataset, warmup_days)
+            groups_dataset = self._dataset_group_by_day(dataset)
             groups = np.concatenate((groups, groups_dataset), axis=1)
         return groups
 
-    def _dataset_group_by_day(self, dataset: ExperimentDataset, warmup_days: int):
+    def _dataset_group_by_day(self, dataset: ExperimentDataset):
         run_id = dataset.get_run_ids()[0]
-        n_steps = max_time_step[run_id] - self.day_length * warmup_days
+        n_steps = max_time_step[run_id]
         assert (
             n_steps % self.day_length == 0
         ), "Datasets must have a multiple of day length time samples."
@@ -162,7 +150,7 @@ class GroupRescale(Preprocessor):
         offset = 0
         for var in state_vars:
             res_generator = SingleReservoirGenerator(state_var=var)
-            X_raw = res_generator.transform(datasets, warmup_days=0)
+            X_raw = res_generator.transform(datasets)
             group_size = X_raw.shape[-1]
             group_slices.append(slice(offset, offset + group_size))
             offset += group_size

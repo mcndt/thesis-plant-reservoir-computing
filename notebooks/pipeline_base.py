@@ -81,7 +81,9 @@ class DelayLineTransform(BaseTransformer):
             y_tf = y[:, : -self.d]
             return X_tf, y_tf, groups
         else:
-            raise Exception("No implementation for negative delay!")
+            X_tf = X[:, : self.d]
+            y_tf = y[:, -self.d :]
+            return X_tf, y_tf, groups
 
 
 class PolynomialTargetTransform(BaseTransformer):
@@ -95,11 +97,32 @@ class PolynomialTargetTransform(BaseTransformer):
 
 
 class NarmaTargetTransform(BaseTransformer):
-    def __init__(self):
-        pass
+    def __init__(self, *, n: int, scale: int, params=(0.3, 0.05, 1.5, 0.1)):
+        self.n = n
+        self.scale = scale
+        self.a, self.b, self.c, self.d = params
 
     def transform(self, X, y, groups) -> np.ndarray:
-        return X, y, groups1
+        _, n_steps = y.shape
+        offset = self.n * self.scale
+
+        y_tf = np.zeros(y.shape)
+        for t in range(offset - 1, n_steps - 1):
+            a_term = self.a * y[:, t]
+            b_term = (
+                self.b
+                * y[:, t]
+                * np.sum(y[:, t : t - offset + 1 : -self.scale], axis=1)
+            )
+            c_term = self.c * y[:, t - offset + 1]
+            d_term = self.d
+            y_tf[:, t + 1] = a_term + b_term + c_term + d_term
+
+        y_tf = y_tf[:, offset:]
+        X_tf = X[:, offset:]
+        groups_tf = groups[:, offset:]
+
+        return X_tf, y_tf, groups_tf
 
 
 ############################

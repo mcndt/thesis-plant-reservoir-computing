@@ -64,6 +64,39 @@ class DirectTransform(BaseTransformer):
         return X, y, groups
 
 
+class DelayLineTransform(BaseTransformer):
+    def __init__(self, *, delay_steps: int):
+        self.d = delay_steps
+
+    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+        if self.d == 0:
+            return X, y, groups
+        elif self.d > 0:
+            X_tf = X[:, self.d :]
+            y_tf = y[:, : -self.d]
+            return X_tf, y_tf, groups
+        else:
+            raise Exception("No implementation for negative delay!")
+
+
+class PolynomialTargetTransform(BaseTransformer):
+    def __init__(self, *, poly_coefs: np.ndarray):
+        self.coefs = list(reversed(poly_coefs))
+
+    def transform(self, X, y, groups) -> np.ndarray:
+        y_tf = np.polyval(self.coefs, y)
+        # y_tf = y ** self.e
+        return X, y_tf, groups
+
+
+class NarmaTargetTransform(BaseTransformer):
+    def __init__(self):
+        pass
+
+    def transform(self, X, y, groups) -> np.ndarray:
+        return X, y, groups1
+
+
 ############################
 ###  Data preprocessing  ###
 ############################

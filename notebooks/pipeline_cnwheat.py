@@ -10,6 +10,7 @@ from pipeline_base import (
     BaseTargetGenerator,
     BaseReservoirGenerator,
     BaseGroupGenerator,
+    BaseTimeGenerator,
     Preprocessor,
 )
 from model_config_cnwheat import max_time_step
@@ -130,6 +131,28 @@ class GroupGenerator(BaseGroupGenerator):
         return groups
 
 
+class TimeGenerator(BaseTimeGenerator):
+    def __init__(self, *, day_length: int):
+        self.day_length = day_length
+
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
+        time = np.empty((1, 0))
+        for dataset in datasets:
+            time_dataset = self._dataset_transform(dataset)
+            time = np.concatenate((time, time_dataset), axis=1)
+        return time
+
+    def _dataset_transform(self, dataset) -> np.ndarray:
+        run_id = dataset.get_run_ids()[0]
+        n_steps = max_time_step[run_id]
+        n_days = int(np.ceil(n_steps / self.day_length))
+
+        mask = np.arange(self.day_length)
+        mask = np.tile(mask, n_days)
+        mask = mask[np.newaxis, :n_steps]
+        return mask
+
+
 ############################
 ###  Data preprocessing  ###
 ############################
@@ -156,11 +179,13 @@ class GroupRescale(Preprocessor):
             offset += group_size
         return group_slices, offset
 
-    def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def transform(
+        self, X, y, groups, time
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         for group_idx in self._group_slices:
             X_g = X[:, group_idx]
             X_g = (X_g - X_g.mean()) / X_g.std()
             X[:, group_idx] = X_g
 
         y = (y - y.mean()) / y.std()
-        return X, y, groups
+        return X, y, groups, time

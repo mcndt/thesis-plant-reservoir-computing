@@ -84,11 +84,15 @@ class DelayLineTransform(BaseTransformer):
         elif self.d > 0:
             X_tf = X[:, self.d :]
             y_tf = y[:, : -self.d]
-            return X_tf, y_tf, groups
+            # Keep the groups tagged to the corresponding reservoir
+            groups_tf = groups[:, self.d :]
+            return X_tf, y_tf, groups_tf
         else:
             X_tf = X[:, : self.d]
             y_tf = y[:, -self.d :]
-            return X_tf, y_tf, groups
+            # Keep the groups tagged to the corresponding reservoir
+            groups_tf = groups[:, : self.d]
+            return X_tf, y_tf, groups_tf
 
 
 class PolynomialTargetTransform(BaseTransformer):
@@ -151,13 +155,21 @@ class Preprocessor(ABC):
 
 
 class DaylightMask(Preprocessor):
-    def __init__(self, *, day_length: int, start: int, end: int):
+    def __init__(self, *, day_length: int, start: int, end: int, delay=0):
         self.daylight_mask = generate_mask(start, end, length=day_length)
+        self.delay = delay
 
     def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         assert len(X) == len(y) == len(groups)
-        n_days = X.shape[0] // len(self.daylight_mask)
+        n_steps = len(X)
+        n_days = int(np.ceil(X.shape[0] / len(self.daylight_mask)))
+
         time_mask = np.tile(self.daylight_mask, n_days)
+        if self.delay > 0:
+            time_mask = time_mask[self.delay :]
+        elif self.delay < 0:
+            time_mask = time_mask[: self.delay]
+
         X = X[time_mask]
         y = y[time_mask]
         groups = groups[time_mask]
@@ -288,7 +300,11 @@ def execute_pipeline(pipeline: RCPipeline):
 
     # Data processing
     for processor in pipeline.preprocessing:
-        X, y, groups = processor.transform(X, y, groups)
+        try:
+            X, y, groups = processor.transform(X, y, groups)
+        except Exception as e:
+            print(f"Error in processor: {processor.__class__}")
+            raise e
 
     # Train test splitting
     train, test = pipeline.train_test_split.transform(X, y, groups)

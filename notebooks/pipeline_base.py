@@ -90,19 +90,21 @@ class DelayLineTransform(BaseTransformer):
 
     def transform(self, X, y, groups, time) -> np.ndarray:
         if self.d == 0:
-            return X, y, groups
+            return X, y, groups, time
         elif self.d > 0:
             X_tf = X[:, self.d :]
             y_tf = y[:, : -self.d]
             # Keep the groups tagged to the corresponding reservoir
             groups_tf = groups[:, self.d :]
-            return X_tf, y_tf, groups_tf
+            time_tf = time[:, self.d :]
+            return X_tf, y_tf, groups_tf, time_tf
         else:
             X_tf = X[:, : self.d]
             y_tf = y[:, -self.d :]
             # Keep the groups tagged to the corresponding reservoir
             groups_tf = groups[:, : self.d]
-            return X_tf, y_tf, groups_tf
+            time_tf = time[:, : self.d]
+            return X_tf, y_tf, groups_tf, time_tf
 
 
 class PolynomialTargetTransform(BaseTransformer):
@@ -112,7 +114,7 @@ class PolynomialTargetTransform(BaseTransformer):
     def transform(self, X, y, groups, time) -> np.ndarray:
         y_tf = np.polyval(self.coefs, y)
         # y_tf = y ** self.e
-        return X, y_tf, groups
+        return X, y_tf, groups, time
 
 
 class NarmaTargetTransform(BaseTransformer):
@@ -140,8 +142,9 @@ class NarmaTargetTransform(BaseTransformer):
         y_tf = y_tf[:, offset:]
         X_tf = X[:, offset:]
         groups_tf = groups[:, offset:]
+        time_tf = time[:, offset:]
 
-        return X_tf, y_tf, groups_tf
+        return X_tf, y_tf, groups_tf, time_tf
 
 
 ############################

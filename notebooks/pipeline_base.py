@@ -69,6 +69,11 @@ class WarmupTransform(BaseTransformer):
         return X_tf, y_tf, groups_tf
 
 
+class CustomWarmupTransform(WarmupTransform):
+    def __init__(self, *, warmup_steps: int):
+        self.warmup_steps = warmup_steps
+
+
 class DelayLineTransform(BaseTransformer):
     def __init__(self, *, delay_steps: int):
         self.d = delay_steps

@@ -42,6 +42,15 @@ class BaseGroupGenerator(ABC):
         pass
 
 
+class BaseTimeGenerator(ABC):
+    def __init__(self, *, day_length: int):
+        self.day_length = day_length
+
+    @abstractmethod
+    def transform(self, datasets: [ExperimentDataset]) -> np.ndarray:
+        pass
+
+
 ########################################
 ###  Target/Reservoir transformers  ####
 ########################################
@@ -49,24 +58,25 @@ class BaseGroupGenerator(ABC):
 
 class BaseTransformer(ABC):
     @abstractmethod
-    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+    def transform(self, X, y, groups, time) -> np.ndarray:
         pass
 
 
 class DirectTransform(BaseTransformer):
-    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
-        return X, y, groups
+    def transform(self, X, y, groups, time) -> np.ndarray:
+        return X, y, groups, time
 
 
 class WarmupTransform(BaseTransformer):
     def __init__(self, *, warmup_days: int, day_length: int):
         self.warmup_steps = warmup_days * day_length
 
-    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+    def transform(self, X, y, groups, time) -> np.ndarray:
         X_tf = X[:, self.warmup_steps :]
         y_tf = y[:, self.warmup_steps :]
         groups_tf = groups[:, self.warmup_steps :]
-        return X_tf, y_tf, groups_tf
+        time_tf = time[:, self.warmup_steps :]
+        return X_tf, y_tf, groups_tf, time_tf
 
 
 class CustomWarmupTransform(WarmupTransform):
@@ -78,7 +88,7 @@ class DelayLineTransform(BaseTransformer):
     def __init__(self, *, delay_steps: int):
         self.d = delay_steps
 
-    def transform(self, X, y, groups: np.ndarray) -> np.ndarray:
+    def transform(self, X, y, groups, time) -> np.ndarray:
         if self.d == 0:
             return X, y, groups
         elif self.d > 0:
@@ -99,7 +109,7 @@ class PolynomialTargetTransform(BaseTransformer):
     def __init__(self, *, poly_coefs: np.ndarray):
         self.coefs = list(reversed(poly_coefs))
 
-    def transform(self, X, y, groups) -> np.ndarray:
+    def transform(self, X, y, groups, time) -> np.ndarray:
         y_tf = np.polyval(self.coefs, y)
         # y_tf = y ** self.e
         return X, y_tf, groups
@@ -111,7 +121,7 @@ class NarmaTargetTransform(BaseTransformer):
         self.scale = scale
         self.a, self.b, self.c, self.d = params
 
-    def transform(self, X, y, groups) -> np.ndarray:
+    def transform(self, X, y, groups, time) -> np.ndarray:
         _, n_steps = y.shape
         offset = self.n * self.scale
 
@@ -139,13 +149,14 @@ class NarmaTargetTransform(BaseTransformer):
 ############################
 
 
-def flatten(X_tf, y_tf, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def flatten(X_tf, y_tf, groups, time) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     assert X_tf.shape[:2] == y_tf.shape == groups.shape
     n_runs, n_samples, n_features = X_tf.shape
     X = X_tf.reshape((-1, n_features))
     y = y_tf.reshape((n_runs * n_samples))
     groups = groups.reshape((n_runs * n_samples))
-    return X, y, groups
+    time = time.reshape((n_runs * n_samples))
+    return X, y, groups, time
 
 
 class Preprocessor(ABC):
@@ -155,38 +166,58 @@ class Preprocessor(ABC):
 
 
 class DaylightMask(Preprocessor):
-    def __init__(self, *, day_length: int, start: int, end: int, delay=0):
-        self.daylight_mask = generate_mask(start, end, length=day_length)
-        self.delay = delay
+    def __init__(self, *, day_length: int, start: int, end: int):
+        self.start = start
+        self.end = end
 
-    def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        assert len(X) == len(y) == len(groups)
-        n_steps = len(X)
-        n_days = int(np.ceil(X.shape[0] / len(self.daylight_mask)))
+    def transform(
+        self, X, y, groups, time
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        assert len(X) == len(y) == len(groups) == len(time)
+        daylight_mask = (time >= self.start) & (time < self.end)
 
-        time_mask = np.tile(self.daylight_mask, n_days)
-        if self.delay > 0:
-            time_mask = time_mask[self.delay :]
-        elif self.delay < 0:
-            time_mask = time_mask[: self.delay]
+        X = X[daylight_mask]
+        y = y[daylight_mask]
+        groups = groups[daylight_mask]
+        time = time[daylight_mask]
+        return X, y, groups, time
 
-        X = X[time_mask]
-        y = y[time_mask]
-        groups = groups[time_mask]
-        return X, y, groups
+
+# class DaylightMask(Preprocessor):
+#     def __init__(self, *, day_length: int, start: int, end: int, delay=0):
+#         self.daylight_mask = generate_mask(start, end, length=day_length)
+#         self.delay = delay
+
+#     def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+#         assert len(X) == len(y) == len(groups)
+#         n_steps = len(X)
+#         n_days = int(np.ceil(X.shape[0] / len(self.daylight_mask)))
+
+#         time_mask = np.tile(self.daylight_mask, n_days)
+#         if self.delay > 0:
+#             time_mask = time_mask[self.delay :]
+#         elif self.delay < 0:
+#             time_mask = time_mask[: self.delay]
+
+#         X = X[time_mask]
+#         y = y[time_mask]
+#         groups = groups[time_mask]
+#         return X, y, groups
 
 
 class Rescale(Preprocessor):
     def __init__(self, *, per_feature):
         self.per_feature = per_feature
 
-    def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def transform(
+        self, X, y, groups, time
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         if self.per_feature:
             X = StandardScaler().fit_transform(X)
         else:
             X = (X - X.mean()) / X.std()
         y = (y - y.mean()) / y.std()
-        return X, y, groups
+        return X, y, groups, time
 
 
 #######################################
@@ -253,6 +284,7 @@ class RCPipeline:
     target: BaseTargetGenerator
     reservoir: BaseReservoirGenerator
     groups: BaseGroupGenerator
+    time: BaseTimeGenerator
 
     # Data transformation
     transforms: List[BaseTransformer]
@@ -290,18 +322,21 @@ def execute_pipeline(pipeline: RCPipeline):
     X_raw = pipeline.reservoir.transform(pipeline.datasets)
     y_raw = pipeline.target.transform(pipeline.datasets)
     groups_raw = pipeline.groups.transform(pipeline.datasets)
+    time_raw = pipeline.time.transform(pipeline.datasets)
 
     # Data transformation
-    X_tf, y_tf, groups_tf = X_raw, y_raw, groups_raw
+    X_tf, y_tf, groups_tf, time_tf = X_raw, y_raw, groups_raw, time_raw
     for transform in pipeline.transforms:
-        X_tf, y_tf, groups_tf = transform.transform(X_tf, y_tf, groups_tf)
+        X_tf, y_tf, groups_tf, time_tf = transform.transform(
+            X_tf, y_tf, groups_tf, time_tf
+        )
 
-    X, y, groups = flatten(X_tf, y_tf, groups_tf)
+    X, y, groups, time = flatten(X_tf, y_tf, groups_tf, time_tf)
 
     # Data processing
     for processor in pipeline.preprocessing:
         try:
-            X, y, groups = processor.transform(X, y, groups)
+            X, y, groups, time = processor.transform(X, y, groups, time)
         except Exception as e:
             print(f"Error in processor: {processor.__class__}")
             raise e

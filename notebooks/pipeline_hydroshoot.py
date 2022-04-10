@@ -10,6 +10,7 @@ from pipeline_base import (
     BaseTargetGenerator,
     BaseReservoirGenerator,
     BaseGroupGenerator,
+    BaseTimeGenerator,
     Preprocessor,
 )
 
@@ -150,6 +151,25 @@ class GroupGenerator(BaseGroupGenerator):
         return groups
 
 
+class TimeGenerator(BaseTimeGenerator):
+    def __init__(self, *, day_length: int, run_ids: [int]):
+        self.day_length = day_length
+        self.n_runs = len(run_ids)
+
+    def transform(self, datasets: [ExperimentDataset]) -> np.ndarray:
+
+        assert len(datasets) == 1, "HydroShoot only uses single datasets."
+        dataset = datasets[0]
+        n_steps = dataset.n_steps()
+        n_days = int(np.ceil(n_steps / self.day_length))
+
+        mask = np.arange(self.day_length)
+        mask = np.tile(mask, n_days)
+        mask = mask[:n_steps]
+        mask = np.tile(mask, (self.n_runs, 1))
+        return mask
+
+
 ############################
 ###  Data preprocessing  ###
 ############################
@@ -182,11 +202,13 @@ class GroupRescale(Preprocessor):
             offset += group_size
         return group_slices, offset
 
-    def transform(self, X, y, groups) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def transform(
+        self, X, y, groups, time
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         for group_idx in self._group_slices:
             X_g = X[:, group_idx]
             X_g = (X_g - X_g.mean()) / (X_g.std() + 1e-12)
             X[:, group_idx] = X_g
 
         y = (y - y.mean()) / y.std()
-        return X, y, groups
+        return X, y, groups, time

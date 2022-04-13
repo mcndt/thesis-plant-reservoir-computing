@@ -34,13 +34,20 @@ state_variables = [
 ]
 
 baseline_reservoirs = [
-    (
-        "env_res",
-        ["input_Tac", "input_u", "input_hs", "input_Rg"],
-    ),
-    ("env_temp_only", ["input_Tac"]),
+    ("env_all", ["input_Tac", "input_u", "input_hs", "input_Rg"],),
+    ("env_temp", ["input_Tac"]),
+    ("env_humidity", ["input_hs"]),
+    ("env_PAR", ["input_Rg"]),
+    ("env_wind", ["input_u"]),
 ]
 
 heterogeneous_reservoirs = [
     ("state__het_all", (*state_variables,)),
 ]
+
+input_names = {
+    "input_Tac": "Air temperature",
+    "input_hs": "Air humidity",
+    "input_Rg": "$I_{{PAR}}$",
+    "input_u": "Wind speed",
+}

@@ -63,9 +63,36 @@ baseline_reservoirs = [
     ("env_PAR", ["input_PARi"]),
 ]
 
+
+baseline_symbols = {
+    "env_all": "Env",
+    "env_temp": "$T_{air}$",
+    "env_humidity": "$RH$",
+    "env_PAR": "$I_{PAR}$",
+}
+
+
 heterogeneous_reservoirs = [
     ("state__het_all", (*state_variables,)),
 ]
+
+output_names = {
+    "output__axes__Total_Transpiration": "Total transpiration",
+    "output__axes__C_exudated": "Exudated C (axes)",
+    "output__axes__SAM_temperature": "SAM temperature (axes)",
+    "output__axes__delta_teq": "temperature-compensated time (axes)",
+    "output__axes__sum_respi_shoot": "Total respiration (shoots)",
+    "output__organ_roots__N_exudation": "Exudated N (roots)",
+}
+
+output_symbols = {
+    "output__axes__Total_Transpiration": "",
+    "output__axes__C_exudated": "",
+    "output__axes__SAM_temperature": "",
+    "output__axes__delta_teq": "",
+    "output__axes__sum_respi_shoot": "",
+    "output__organ_roots__N_exudation": "",
+}
 
 input_names = {
     "input_air_temperature": "Air temperature",

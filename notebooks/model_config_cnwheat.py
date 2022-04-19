@@ -19,9 +19,9 @@ hydroshoot_outputs = (
 hydroshoot_state = (
     "state__An",
     "state__Transpiration",
-    "state__S_Sucrose",
     "state__Ts",
     "state__gs",
+    # "state__S_Sucrose",
 )
 
 exclusive_outputs = (
@@ -33,11 +33,11 @@ exclusive_outputs = (
 exclusive_state = (
     "state__Ag",
     "state__Tr",
-    "state__sucrose",
     "state__Rd",
     "state__sum_respi",
-    "state__Photosynthesis",
     "state__PARa",
+    # "state__sucrose",
+    # "state__Photosynthesis",
 )
 
 
@@ -70,6 +70,72 @@ heterogeneous_reservoirs = [
 input_names = {
     "input_air_temperature": "Air temperature",
     "input_humidity": "Air humidity",
+    "input_PARi": "Photosynthetically active radiation",
+}
+
+input_symbols = {
+    "input_air_temperature": "$T_{air}$",
+    "input_humidity": "$RH$",
     "input_PARi": "$I_{{PAR}}$",
 }
 
+
+state_names = {
+    "state__Ts": "Organ surface temperature",
+    "state__Tr": "Organ surface transpiration rate",
+    "state__Transpiration": "Organ transpiration rate",
+    "state__Ag": "Gross photosynthesis of photosynthetic organ",
+    "state__An": "Net photosynthesis of photosynthetic organ",
+    "state__gs": "Stomatal conductance",
+    "state__Rd": "Mitochondrial respiration rate of organ in light",
+    "state__PARa": "Absorbed PAR",
+    "state__sum_respi": "Sum of respiration (element)",
+    # Unknown
+    # "state__S_Sucrose": "state__S_Sucrose",
+    # "state__sucrose": "state__sucrose",
+    # "state__Photosynthesis": "state__Photosynthesis",
+}
+
+
+state_symbols = {
+    "state__Ts": "$T_{s}$",
+    "state__Tr": "$Tr_{tp,i}$",
+    "state__Transpiration": "Organ transpiration rate",
+    "state__Ag": "$Ag_{tp,i}$",
+    "state__An": "$An_{tp,i}$",
+    "state__gs": "$g_{s}$",
+    "state__Rd": "$Rd$",
+    "state__PARa": "$PAR_{a}$",
+    "state__sum_respi": "Sum of respiration (element)",
+    # Unknown
+    # "state__S_Sucrose": "state__S_Sucrose",
+    # "state__sucrose": "state__sucrose",
+    # "state__Photosynthesis": "state__Photosynthesis",
+}
+
+
+state_units = {
+    "state__Ts": "°C",
+    "state__Tr": "mmol H$_{2}$0 m$^{-2}$ s$^{-1}$",
+    "state__Transpiration": "mmol H$_{2}$0 s$^{-1}$",
+    "state__Ag": "µmol m$^{-2}$ s$^{-1}$",
+    "state__An": "µmol m$^{-2}$ s$^{-1}$",
+    "state__gs": "mol m$^{-2}$ s$^{-1}$",
+    "state__Rd": "µmol C h$^{-1}$",
+    "state__PARa": "µmol m$^{-2}$ s$^{-1}$",
+    "state__sum_respi": "µmol C",
+    # Unknown
+    # "state__S_Sucrose": "",
+    # "state__sucrose": "",
+    # "state__Photosynthesis": "",
+}
+
+measurable_reservoirs = [
+    "state__An",
+    "state__Ts",
+    "state__Tr",
+    "state__Transpiration",
+    "state__Rd",
+    "state__gs",
+    "state__sum_respi",
+]

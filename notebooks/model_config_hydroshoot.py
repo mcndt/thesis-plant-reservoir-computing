@@ -53,6 +53,15 @@ baseline_reservoirs = [
 ]
 
 
+baseline_symbols = {
+    "env_all": "Env",
+    "env_temp": "$T_{air}$",
+    "env_humidity": "$RH$",
+    "env_PAR": "$R_{g}$",
+    "env_wind": "$u$",
+}
+
+
 heterogeneous_reservoirs = [
     ("state__het_all", (*state_variables,)),
 ]

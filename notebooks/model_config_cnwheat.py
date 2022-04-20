@@ -166,3 +166,11 @@ measurable_reservoirs = [
     "state__gs",
     "state__sum_respi",
 ]
+
+
+best_reservoirs = [
+    "state__Ts",
+    "state__Tr",
+    "state__Rd",
+]
+

@@ -154,7 +154,15 @@ output_symbols = {
 
 output_units = {
     "output_Rg": "W m$^{-2}$",
-    "output_An": "µmol s$^{-1}",
+    "output_An": "µmol s$^{-1}$",
     "output_E": "g h$^{-1}$",
     "output_Tleaf": "°C",
 }
+
+
+best_reservoirs = [
+    "state_Tlc",
+    "state_psi_head",
+    "state_E",
+    "state_Flux",
+]

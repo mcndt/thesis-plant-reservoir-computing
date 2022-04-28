@@ -65,7 +65,7 @@ baseline_reservoirs = [
 
 
 baseline_symbols = {
-    "env_all": "Env",
+    "env_all": "All",
     "env_temp": "$T_{air}$",
     "env_humidity": "$RH$",
     "env_PAR": "$I_{PAR}$",
@@ -78,12 +78,22 @@ heterogeneous_reservoirs = [
 
 output_names = {
     "output__axes__Total_Transpiration": "Total transpiration",
-    "output__axes__C_exudated": "Exudated C (axes)",
-    "output__axes__SAM_temperature": "SAM temperature (axes)",
-    "output__axes__delta_teq": "temperature-compensated time (axes)",
-    "output__axes__sum_respi_shoot": "Total respiration (shoots)",
-    "output__organ_roots__N_exudation": "Exudated N (roots)",
+    "output__axes__C_exudated": "Exudated carbon",
+    "output__axes__SAM_temperature": "SAM temperature",
+    "output__axes__delta_teq": "temperature-compensated time",
+    "output__axes__sum_respi_shoot": "Total respiration",
+    "output__organ_roots__N_exudation": "Exudated nitrogen",
 }
+
+
+# output_names = {
+#     "output__axes__Total_Transpiration": "Total transpiration",
+#     "output__axes__C_exudated": "Exudated C (axes)",
+#     "output__axes__SAM_temperature": "SAM temperature (axes)",
+#     "output__axes__delta_teq": "temperature-compensated time (axes)",
+#     "output__axes__sum_respi_shoot": "Total respiration (shoots)",
+#     "output__organ_roots__N_exudation": "Exudated N (roots)",
+# }
 
 output_symbols = {
     "output__axes__Total_Transpiration": "",
@@ -161,10 +171,10 @@ measurable_reservoirs = [
     "state__An",
     "state__Ts",
     "state__Tr",
-    "state__Transpiration",
+    # "state__Transpiration",
     "state__Rd",
     "state__gs",
-    "state__sum_respi",
+    # "state__sum_respi",
 ]
 
 

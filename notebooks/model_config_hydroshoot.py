@@ -54,7 +54,7 @@ baseline_reservoirs = [
 
 
 baseline_symbols = {
-    "env_all": "Env",
+    "env_all": "All",
     "env_temp": "$T_{air}$",
     "env_humidity": "$RH$",
     "env_PAR": "$R_{g}$",
@@ -98,13 +98,13 @@ state_symbols = {
 }
 
 state_units = {
-    "state_An": "µmol m$^{-2}$ s$^{-1}",
+    "state_An": "µmol m$^{-2}$ s$^{-1}$",
     "state_Tlc": "°C",
     "state_Flux": "kg s$^{-1}$",
-    "state_gs": "mol m$^{-2}$ s$^{-1}",
-    "state_gb": "mol m$^{-2}$ s$^{-1}",
+    "state_gs": "mol m$^{-2}$ s$^{-1}$",
+    "state_gb": "mol m$^{-2}$ s$^{-1}$",
     "state_psi_head": "MPa",
-    "state_E": "mol m$^{-2}$ s$^{-1}",
+    "state_E": "mol m$^{-2}$ s$^{-1}$",
     # Unknown
     # "state_FluxC": "",
     # "state_Eabs": "",
@@ -164,5 +164,5 @@ best_reservoirs = [
     "state_Tlc",
     "state_psi_head",
     "state_E",
-    "state_Flux",
+    # "state_Flux",
 ]

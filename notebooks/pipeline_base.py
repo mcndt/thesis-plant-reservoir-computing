@@ -319,7 +319,7 @@ def fit_model(model, X, y, groups, folds, search_grid) -> BaseEstimator:
     return final_model, cv_scores
 
 
-def execute_pipeline(pipeline: RCPipeline):
+def execute_pipeline(pipeline: RCPipeline, return_model_data=False):
 
     # Data generation
     X_raw = pipeline.reservoir.transform(pipeline.datasets)
@@ -370,5 +370,13 @@ def execute_pipeline(pipeline: RCPipeline):
         "cv_mean": cv_mean,
         "cv_std": cv_std,
     }
+
+    if return_model_data is True:
+        model_data = {
+            "train_data": (X_train, y_train),
+            "test_data": (X_test, y_test),
+            "final_model": final_model,
+        }
+        return (result_dict, model_data)
 
     return result_dict

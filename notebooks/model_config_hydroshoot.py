@@ -71,8 +71,8 @@ state_names = {
     "state_An": "Net photosynthesis rate",
     "state_Tlc": "Leaf surface temperature",
     "state_Flux": "Water flow",
-    "state_gs": "Boundary layer conductance",
-    "state_gb": "Stomatal conductance",
+    "state_gb": "Boundary layer conductance",
+    "state_gs": "Stomatal conductance",
     "state_psi_head": "Mean water potential",
     "state_E": "Transpiration rate",
     # Unknown

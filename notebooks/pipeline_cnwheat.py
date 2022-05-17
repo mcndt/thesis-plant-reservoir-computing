@@ -54,18 +54,24 @@ class AbsorbedPARGenerator(BaseTargetGenerator):
 
 
 class SingleReservoirGenerator(BaseReservoirGenerator):
-    def __init__(self, *, state_var: str):
+    def __init__(
+        self, *, state_var: str, state_ids: np.ndarray = None,
+    ):
         self.state_var = state_var
+        self.state_ids = state_ids
 
     def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
+
+        if self.state_ids is None:
+            self.state_ids = slice(0, dataset.state_size())
 
         for dataset in datasets:
             assert (
                 self.state_var in dataset.get_state_variables()
             ), f"{self.state_var} not available in dataset."
             run_id = dataset.get_run_ids()[0]
-            X_dataset = dataset.get_state(self.state_var, run_id)
+            X_dataset = dataset.get_state(self.state_var, run_id)[:, self.state_ids]
             X_dataset = X_dataset[: max_time_step[run_id]]
 
             # Filter out NaN and zero series
@@ -86,13 +92,18 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
 
 
 class MultiReservoirGenerator(BaseReservoirGenerator):
-    def __init__(self, *, state_vars: List[str]):
+    def __init__(
+        self, *, state_vars: List[str], state_ids: np.ndarray = None,
+    ):
         self.state_vars = state_vars
+        self.state_ids = state_ids
 
     def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
         for state_var in self.state_vars:
-            reservoir_generator = SingleReservoirGenerator(state_var=state_var)
+            reservoir_generator = SingleReservoirGenerator(
+                state_var=state_var, state_ids=self.state_ids
+            )
             X_raw_var = reservoir_generator.transform(datasets)
             if X is None:
                 X = X_raw_var
@@ -172,17 +183,21 @@ class GroupRescale(Preprocessor):
     "Rescale features based on the mean and std of the feature group they belong to."
 
     def __init__(
-        self, *, datasets: List[ExperimentDataset], state_vars: List[str],
+        self,
+        *,
+        datasets: List[ExperimentDataset],
+        state_vars: List[str],
+        state_ids: [int] = None,
     ):
-        group_slices, n_features = self._get_groups(datasets, state_vars)
+        group_slices, n_features = self._get_groups(datasets, state_vars, state_ids)
         self._group_slices = group_slices
         self._n_expected_features = n_features
 
-    def _get_groups(self, datasets, state_vars) -> List[slice]:
+    def _get_groups(self, datasets, state_vars, state_ids,) -> List[slice]:
         group_slices = []
         offset = 0
         for var in state_vars:
-            res_generator = SingleReservoirGenerator(state_var=var)
+            res_generator = SingleReservoirGenerator(state_var=var, state_ids=state_ids)
             X_raw = res_generator.transform(datasets)
             group_size = X_raw.shape[-1]
             group_slices.append(slice(offset, offset + group_size))

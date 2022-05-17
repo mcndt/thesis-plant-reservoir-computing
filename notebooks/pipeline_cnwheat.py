@@ -28,6 +28,11 @@ class TargetGenerator(BaseTargetGenerator):
         self.target = target
 
     def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
+
+        if self.target == "output__custom__PARa":
+            generator = AbsorbedPARGenerator()
+            return generator.transform(datasets)
+
         y = np.empty((1, 0))
 
         for dataset in datasets:
@@ -63,15 +68,12 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
     def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
         X = None
 
-        if self.state_ids is None:
-            self.state_ids = slice(0, dataset.state_size())
-
         for dataset in datasets:
             assert (
                 self.state_var in dataset.get_state_variables()
             ), f"{self.state_var} not available in dataset."
             run_id = dataset.get_run_ids()[0]
-            X_dataset = dataset.get_state(self.state_var, run_id)[:, self.state_ids]
+            X_dataset = dataset.get_state(self.state_var, run_id)
             X_dataset = X_dataset[: max_time_step[run_id]]
 
             # Filter out NaN and zero series
@@ -80,6 +82,9 @@ class SingleReservoirGenerator(BaseReservoirGenerator):
             X_null = np.isclose(X_dataset, 0)
             null_idx = np.all(X_null, axis=0)
             X_dataset = X_dataset[:, ~NaN_idx & ~null_idx]
+
+            if self.state_ids is not None:
+                X_dataset = X_dataset[:, self.state_ids]
 
             X_dataset = X_dataset.reshape(1, *X_dataset.shape)
 

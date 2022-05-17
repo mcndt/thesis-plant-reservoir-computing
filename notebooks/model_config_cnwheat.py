@@ -30,6 +30,8 @@ exclusive_outputs = (
     "output__organ_roots__N_exudation",
 )
 
+
+
 exclusive_state = (
     "state__Ag",
     "state__Tr",
@@ -184,3 +186,12 @@ best_reservoirs = [
     "state__Rd",
 ]
 
+final_targets = [
+    "input_air_temperature",
+    "input_humidity",
+    "input_PARi",
+    "output__axes__Total_Transpiration",
+    "output__axes__sum_respi_roots",
+    "output__axes__sum_respi_shoot",
+    "output__custom__PARa",
+]

@@ -170,10 +170,10 @@ state_units = {
 measurable_reservoirs = [
     "state__An",
     "state__Ts",
+    "state__gs",
     "state__Tr",
     # "state__Transpiration",
-    "state__Rd",
-    "state__gs",
+    # "state__Rd",
     # "state__sum_respi",
 ]
 

@@ -43,6 +43,16 @@ class TargetGenerator(BaseTargetGenerator):
         return y
 
 
+class AbsorbedPARGenerator(BaseTargetGenerator):
+    """Transforms a dataset or list of datasets into a single target."""
+
+    def transform(self, datasets: List[ExperimentDataset]) -> np.ndarray:
+        reservoir = SingleReservoirGenerator(state_var="state__PARa")
+        data = reservoir.transform(datasets)
+        data = np.sum(data, axis=-1)
+        return data
+
+
 class SingleReservoirGenerator(BaseReservoirGenerator):
     def __init__(self, *, state_var: str):
         self.state_var = state_var

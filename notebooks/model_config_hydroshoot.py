@@ -34,10 +34,10 @@ state_variables = [
 measurable_reservoirs = [
     "state_An",
     "state_Tlc",
-    "state_Flux",
     "state_gs",
-    "state_psi_head",
     "state_E",
+    "state_Flux",
+    "state_psi_head",
     # "state_gb",
 ]
 
@@ -63,7 +63,7 @@ baseline_symbols = {
 
 
 heterogeneous_reservoirs = [
-    ("state__het_all", (*state_variables,)),
+    ("state_all", (*measurable_reservoirs,)),
 ]
 
 

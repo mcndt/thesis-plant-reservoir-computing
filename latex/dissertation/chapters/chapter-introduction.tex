@@ -1,0 +1,128 @@
+
+\chapter{Introduction} \label{chapter:intro}
+
+% Intro to a background in agricultural research
+New challenges confront the field of agricultural research every year.
+The biggest challenge is, of course, climate change \citep{bisoffi_meta-analysis_2019}.
+% While changing climate conditions threaten agricultural activities, farming practices themselves play a significant role in climate change \cite{bisoffi_meta-analysis_2019}.
+Changing climate conditions threaten many common crops, including staple crops such as corn, wheat, rice, sunflower, and cotton \citep{hatfield_ch_2014}.
+Other areas of concern include food security, rising population, declining land productivity, and urban food strategy \citep{european_commission_directorate_general_for_research_and_innovation_new_2009, european_commission_directorate_general_for_research_and_innovation_resilience_2020}.
+
+\section{Ongoing Efforts in Agricultural Research}
+
+% Intro to phenotyping: definition, role in research, link with agriculture challenges
+A significant amount of research is dedicated to discovering and breeding crop varieties that are well-adapted to the novel climate, water, and soil conditions caused by global warming.
+Phenotyping plays a vital role in this.
+In agricultural research, phenotyping refers to identifying species varieties (phenotypes) with positive traits from a large pool of genetic variants (genotypes) \citep{walter_plant_2015}.
+For example, suppose researchers attempt to breed crops more resilient to saltwater. 
+In that case, the researchers will measure the saltwater resistance of each specimen in their pool of genetic variants and selectively breed the phenotypes with the best resistive properties.
+However, the phenotype of an organism is the outcome of complex interactions between genetic and environmental factors, resulting in a high-dimensional problem space \citep{walter_plant_2015}. 
+Because of this, current \textit{in vivo} research is limited to measuring the effect of one or two environmental variables on a plant, even though the plant's response integrates many more variables that are unaccounted for \citep{pieters_reservoir_2022}. 
+Novel approaches should aim to more accurately model the interaction between the phenotype and the whole environment.
+
+
+% Intro to autonomous farming
+Another active line of research is autonomous greenhouse farming.
+Crop growth in a greenhouse setting is affected by many factors, including light, temperature, humidity, CO\textsubscript{2}, and water and nutrient delivery \citep{hemming_why_nodate}.
+The greenhouse farmer must finely control these factors to balance crop yield with major cost drivers like water and energy intensity.
+In addition, the grower must control pests and diseases to have a successful harvest.
+A farmer who wishes to optimize their operating efficiency must manage all these interlinked aspects, which requires an intricate understanding of the crop species from the grower.
+The need for this deep, crop-specific domain knowledge forms a bottleneck for rapidly expanding the number of greenhouses in operation or scaling the number of different crops grown in a single facility.
+Autonomous farming aims to assist the farmer through (partial) automation of the decision-making process and delivery system while minimizing resource use.
+This goal can be achieved using advanced sensor technology combined with AI techniques such as computer vision and machine learning \citep{hemming_why_nodate}.
+Autonomous greenhouses may one day answer the need for food security and food delivery in areas with high urban density and decrease the strain on rural farmlands to feed the rapidly growing urban population.
+
+
+% Intro to the need for a better understanding of plant physiology
+On a more fundamental level, research must be conducted to better understand the eco-physiological processes that drive plant growth and health.
+A better understanding of the inner workings of plants will help accelerate the development of new resistant varieties.
+It can also help reveal the soundest indicators of plant well-being to incorporate into the control systems of autonomous greenhouses.
+Yet, it is insufficient to comprehend the physical interactions between the plant and its abiotic environment in isolation.
+The plant responds to the sum of its environment, resulting in emergent behavior that may be unaccounted for in theoretical findings and lab experiments \citep{poorter_pampered_2016}.
+
+
+% The state of modeling plant-environment interactions
+Mechanistic models are state-of-the-art for modeling the interactions between the plant and its abiotic environment. 
+These models simulate the plant at the lowest level, commonly implementing physiological processes at the cell organ level such as photosynthesis, transpiration, and water and carbon flow \citep{coussement_turgor-driven_2020}.
+It then becomes possible to study emergent behaviors that result from these base processes.
+By subjecting mechanistic models to novel environmental conditions, they can simulate the plant's response to various scenarios, such as new soil types or drought.
+This use case makes mechanistic models of particular interest in understanding macroscopic plant behavior and phenotyping.
+This type of model has shown very encouraging results in the past decade \citep{louarn_two_2020}.
+
+
+However, there are some drawbacks to mechanistic models.
+First, this model is computationally expensive as it relies on solving many differential equations for every time step. 
+Because of this, the simulated time scale is frequently limited to hours or days. The computational cost makes them unsuited for modeling interactions that occur at the second or minute scale, even though those play a significant role in the behavior of plants \citep{pieters_reservoir_2022}.
+Second, the development of mechanistic models is closely coupled to the theoretical understanding of a species's physiology. 
+As a result, the model is only as accurate as the current understanding of the plant's low-level processes.
+Finally, developing a mechanistic model is a significant undertaking. 
+A large portion of the work cannot be generalized to other species, which forms a significant bottleneck in the development speed of plant models.
+In conclusion, though mechanistic models have become increasingly relevant in the literature, there is still room for alternative approaches that can be applied more broadly and are faster to deploy.
+
+\section{Reservoir Computing}
+
+% What is reservoir computing?
+\acrfull{rc} is a holistic machine learning technique commonly used with time series data.
+Instead of relying on resource-intensive and data-hungry deep learning techniques, \acrshort{rc} works by exploiting the computational properties of nonlinear dynamical systems, which are called reservoirs in this context.
+The key to understanding reservoir computing is that all non-linearity and memory required to solve a problem are already present in the reservoir dynamics.
+Only a simple linear regression model is needed to transform the information in the reservoir into an interpretable output value.
+\acrshort{rc} was first introduced as a computer model \citep{jaeger_echo_2002, maass_real-time_2002, steil_backpropagation-decorrelation_2004}.
+However, nonlinear dynamical behavior can be observed in many physical systems as well, and there exists a rich literature on the use of physical media as computational resources \citep{tanaka_recent_2019}.
+
+
+% What is reservoir computing with plants?
+Plants can also be interpreted as a computational resource.
+The plant's environment is the its input, and its health, growth, and behavior are a result of processing this information.
+Interpreting plants as intelligent information-processing organisms is not a new idea.
+A large body of research indicates that plants are aware of their environment, have memory, and are capable of learning complex patterns \citep{mancuso_revolutionary_2018}. 
+Experiments by \citet{stepney_computers_2018} have shown limited yet promising success in exploiting plant intelligence to implement various functions and algorithms.
+Though our goal is not to implement general-purpose computing using plants, their work serves as experimental evidence that plants can indeed compute highly nonlinear functions.
+Most recently, \citet{pieters_plants_2021} have demonstrated the first successful application of reservoir computing with plants. 
+Their research shows that \textit{Fragaria × ananassa} (strawberry) is capable of performing several environmental, eco-physiological, and computational tasks, paving the way to apply reservoir computing more broadly to a variety of crops.
+
+
+% Applications of reservoir computing with plants?
+If plants do indeed behave like computing reservoirs, \acrshort{rc} may become a versatile addition to the agricultural research and development toolbox.
+For example, observing and measuring the relationship between environmental signals (reservoir input) and plant behavior (reservoir dynamics), we could gain insights into eco-physiological processes not yet uncovered or understood.
+We suspect there are still considerable opportunities for discovering new phenomena with this holistic data-driven approach, especially on the time scale between seconds and minutes.
+In addition, reservoir computing can have applications in phenotyping. 
+The \acrshort{rc} framework may be able to identify phenotypes that are better or faster at integrating their environmental inputs into an adaptive response.
+Especially rapid responses are currently underexplored in phenotyping research, even though they play an essential role in plant life \citep{alarcon_substantial_1994, de_swaef_plant_2015}.
+Even further down the road, RC can be applied in autonomous greenhouses to observe the plant's real-time response to the conditions set by the grower or autonomous control system. 
+A closed-circuit control loop can be designed that integrates the real-time behavior of the plant, where the plant itself controls the delivery of light, water, and nutrients.
+
+
+\section{Research Outline}
+
+% Outline of my research contribution
+% \citet{pieters_reservoir_2022} has shown that reservoir computing with plants is possible.
+% Now, a more thorough examination of the reservoir characteristics of plant-physiological processes is warranted.
+% The main contribution of this work is the further exploration of the available reservoir dynamics in plants.
+% We investigate several observable eco-physiological processes' nonlinearity, memory capacity, and fading memory property by performing relevant environmental and eco-physiological reservoir tasks. 
+% We identify a set of promising physiological processes as reservoirs for future \acrshort{rc} research.
+The work by Pieters has shown that reservoir computing with plants is possible.
+Now, a more thorough examination of the reservoir characteristics of plant-physiological processes is warranted.
+In this work, we further investigated the reservoir dynamics present in plants.
+We investigated several observable eco-physiological processes' linear task separation and memory capacity by performing relevant environmental and eco-physiological reservoir tasks. 
+These experiments identified a set of promising physiological reservoirs for future RC research.
+We also verified whether these physiological processes displayed the fading memory property, an essential precondition for performing deterministic computations.
+
+
+% Why in silico plants?
+We conduct our research with \textit{in silico} plants.
+Working with simulations provides the freedom to observe the plant's physiological processes without the need for sensing technology or laboratory setups.
+% It gives us a first intuition into which processes show promising reservoir dynamics, which directly informs future plant \acrshort{rc} research with \textit{in vivo} specimens.
+% \acrshort{rc} might also contribute to FSPM development by identifying weaknesses in models that have previously gone unnoticed.
+It gives us a first intuition into which processes show promising reservoir dynamics, which informs future research with \textit{in vivo} specimens.
+RC can also contribute to FSPM development by identifying flaws in physiological models that previously went unnoticed.
+
+
+\newpage
+\section{Chapters overview}
+
+To understand the research presented in this book, Chapter \ref{chapter:lit-prc} starts with a brief primer on the principles of reservoir computing and the use of physical media for computation. 
+In Chapter \ref{chapter:fspm}, we give a brief introduction to the research field of plant modeling and simulation. 
+Then, Chapter \ref{chapter:exp-setup} elaborates on the research goals set for this work and explains the experimental design.
+Chapters \ref{chapter:models-used} and \ref{chapter:methods} delve deeper into our methods by explaining the selection process for computer plant models and the experiment implementation details, respectively.
+Next, Chapter \ref{chapter:results} reports our experimental data and discusses those results. 
+Finally, \ref{chapter:discussion} concludes the book with a summary of our key takeaways and a discussion of future work.

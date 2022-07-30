@@ -1,0 +1,30 @@
+With the proper context established above, this section gives an overview of the consi
+
+
+Explain the considerations to account for when selecting FSPMs useful to our research:
+
+\begin{itemize}
+\item sufficiently complex model dynamics, 
+\item sufficient amount of inputs and outputs to predict, 
+\item easy extraction of time series data, 
+\item easy automation of simulation runs and subsequent data extraction (honestly: works nicely with Python!)
+\item if the model already calculates a plant metric analytically, then this is a great ground truth to try to predict, 
+\item etc.
+\end{itemize}
+
+Give an emphasis on spatial-temporal behavior of the FSPM's elementary elements, in particular that there should be sufficient nonlinear relations between observations of the plant at different points of its physical body, in order to perceive any nonlinear/memory capacity in the plant as reservoir (think also of research results of semester 1).
+
+% Also see shortlist document in Obsidian
+
+% From december presentation:
+%
+% So the family of simulation models I use are called functional-structural plant models.
+%
+% -> They model the plant in 3D space as a collection of small connected segments (order of magnitude 1e3). 
+% -> Each little segment has an internal state that can describe a variety of physiological properties, such as the water pressure inside the segment, the flow of water and carbon, the amount of photosynthetic activity if the segment represents a leaf, and so on.
+% -> The model is updated every time step by calculating the result of interactions between connected segments and between the plant and the environment.
+% -> These interactions are based on mathematical relationships which are modelled by biologists or bio engineers
+% -> These mathematical interactions (by the way) are what results in the nonlinear dynamical behavior of the plant in response to its environment.
+% -> The exact details differ from model to model
+%
+% This kind of model is ideal for our purposes because in the reservoir interpretation of a plant, we need to observe different parts of the plant and these parts need to behave differently from each other in a nonlinear way!

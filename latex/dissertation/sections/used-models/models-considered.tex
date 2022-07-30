@@ -1,0 +1,39 @@
+
+% Introduction to the list of models.
+% We searched for FSPMs that fit our criteria through Quantitative Plant and a literature search
+There are diverse models in the literature, but many do not meet all our demands.
+There are a few common shortcomings.
+For one, many FSPMs only model a limited set of physiological processes \citep{louarn_two_2020}.
+These simulations are too narrow to gain convincing evidence of reservoir dynamics present in real-world plants.
+Other published works show sophisticated architectures and solid real-world validations but do not make their simulations open source \citep{prieto_functionalstructural_2020}. 
+
+
+% Discussion of considered of FSPMs.
+Table \ref{table:models-related-work} shows a selection of plant models we examined more closely.
+We briefly investigated V-Mango \citep{boudon_v-mango_2020} and WALTer \citep{lecarpentier_walter_2019}. Ultimately, we disregarded these models because they model growth with time steps of one day. 
+This step size is too large to explore reservoir dynamics at the time scales we want to observe (\SI{1}{s}-\SI{1}{h}).
+
+PlaNet-Maize \citep{lobet_modeling_2014} and Soybean FSPM \citep{coussement_turgor-driven_2020} are growth models, but the step size of one hour warrants taking a deeper look;
+when the growth rate is very slow compared to the time scale of the target task, the reservoir can be regarded as approximately static, as \citet{pieters_reservoir_2022} demonstrated with \textit{in vivo} strawberry plants.
+Unfortunately, we could not further explore this direction due to practical reasons.
+PlaNet-Maize is open-source, but the code repository contains no documentation on getting started or making modifications.
+The soybean model is closed-source but was made available to us by co-author T. De Swaef.
+Regrettably, we met many difficulties setting up the simulation environment, and the GroIMP platform made it unintuitive to implement adaptations as an untrained user.
+Because of these reasons, combined with the limited time scope of this project, we did not explore these models further.
+
+\input{tables/models_related_work}
+
+% Discussion of shortlisting of FSPMs.
+HydroShoot \citep{albasha_hydroshoot_2019} and a similar, unnamed model by \citet{prieto_functionalstructural_2020} are both FSPMs of grapevine; they have a static geometry and model a diverse set of physiological functions involved in gas exchange.
+As far as we could find, \citeauthor{prieto_functionalstructural_2020} did not publish the code for their model.
+In contrast, HydroShoot is open source and very well documented.
+It was straightforward to set up using the Conda package manager for Python. The use of well-documented libraries from the OpenAlea platform made it easy to track the plant's state or adjust its environment.
+
+Finally, WheatFspm \citep{gauthier_functional_2020} is another growth model.
+WheatFspm builds upon the prior work CN-Wheat \citep{barillot_cn-wheat_2016}, a post-vegetative growth model of the same species.
+Because we prefer (pseudo-)static models, we used CN-Wheat for our experiments instead.
+The simulation code provided in the source repository already extracts all physiological time series, making CN-Wheat a very convenient model for our purposes.
+
+Both HydroShoot and CN-Wheat have a good overlap in the physiological processes and meteorological inputs they simulate. 
+These shared qualities enable a closer comparison of how the models behave as reservoirs when solving the same regression tasks.
+The following section introduces the two selected models in more detail and compares them from a \acrshort{rc} perspective.

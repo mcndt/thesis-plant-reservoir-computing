@@ -1,0 +1,37 @@
+
+% introduction
+The Echo State Network (ESN) is a mathematical framework that implements the core concepts of reservoir computing \citep{jaeger_tutorial_2002}. 
+In this framework, the reservoir is a discrete-time RNN using a sigmoidal nonlinearity (such as the tanh function). 
+The activation weights of the reservoir are initialized randomly and remain fixed. 
+The linear readout function takes the reservoir state as input and is fit to the desired target signal.
+
+The reservoir state in time step $t$ is calculated from the input signal $\mathbf{u}$ using the following update rules \citep{lukosevicius_reservoir_2012},
+
+
+\begin{align}
+    \tilde{\mathbf{x}}[t] &= \tanh \left( \mathbf{W}^{\text{in}}[1;\mathbf{u}[t]] + \mathbf{W} \mathbf{x}[t-1] \right) \label{esn:update1} \\
+    \mathbf{x}[t] &= (1-\alpha) \mathbf{x}[t-1] + \alpha \tilde{\mathbf{x}}[t] \label{esn:update2}
+\end{align}
+
+
+where $\mathbf{x}$ signifies the reservoir neurons' activations, $\mathbf{\tilde{x}}$ the activation update, and $\alpha$ a scalar leaking rate. The readout function $\mathbf{y}$ is fulfilled by a simple linear regression of the reservoir state and an optional direct feed-in of the input signal.
+
+\begin{equation}
+\mathbf{y}[t] = \mathbf{W}^{\text{out}}\left[1; \mathbf{u}[t];\mathbf{x}[t] \right] \label{esn:readout}
+\end{equation}
+
+
+The weights $\mathbf{W}^{\text{out}}$ of the readout function can be trained using a variety of learning methods. A common offline approach for fitting the function output to a target signal is ridge regression \citep{lukosevicius_reservoir_2012}:
+
+\begin{equation}
+    \mathbf{W}^{\text{out}} = \mathbf{Y}_{\text{target}}\mathbf{X}^{T} \left(\mathbf{X} \mathbf{X}^{T} + \lambda^{2} \mathbf{I} \right)^{-1} \label{esn:training}
+\end{equation}
+
+where $\lambda$ is a regularization parameter that prevents overfitting.
+For $\lambda$ = 0, the model attempts to find weights that fit the training data exactly.
+The results is a high training accuracy, but low accuracy on unseen data.
+Large model weights are penalized for $\lambda$ > 0, resulting in smaller weights and a more generalized model.
+However, if $\lambda$ is too large, the model parameters shrink too much, and the model loses expressiveness.
+The optimal value for $\lambda$ should be selected using validation data separate from training and test data.
+Other regression techniques are also possible.
+For example, \citet{burms_reward-modulated_2015} have demonstrated online training of the readout function using reward-modulated Hebbian plasticity rules.

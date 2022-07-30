@@ -1,0 +1,38 @@
+
+% Need for deterministic computations
+Strictly speaking, for a reservoir to possess reproducible computational properties, it must show a deterministic relation between its input sequence and its state \citep{nakajima_physical_2020}. 
+Put plainly, applying the same input sequence should reliably produce the same sequence of output states.
+
+
+% Determinism is too strict for physical systems
+This precondition is particularly strict on physical systems because it requires precise control over the initial conditions of the physical reservoir (Equation \ref{prc:update}).
+This requirement is virtually unattainable as it is impossible to account for all physical factors of an environment that influence the reservoir before the start of the experiment.
+Fortunately, a lesser but sufficient condition exists to perform useful computation with a reservoir.
+
+
+% The echo state property comes to the rescue
+The echo state property (\acrshort{esp}) (also referred to as the fading memory property) defines a less strict precondition under which it is possible to derive computations from a dynamical system.
+Informally, the \acrshort{esp} states that a sufficient condition for reservoir computing is for the input echo function $\phi$ (Equation \ref{prc:echo_input_function}) to have fading memory of past inputs \citep{lukosevicius_reservoir_2012}. 
+If this assumption is valid, then the trajectories of the reservoir state will converge when subjected to the same input sequence, regardless of the initial conditions.
+A side-effect of the echo state property is that it limits the reservoir's memory of past events, thus limiting the available integration window for memory-bound tasks.
+
+
+% Example in ESN.
+Figure \ref{fig:fading_mem_principle} demonstrates the principle using an ESN. It shows the evolution of a single node in the network for two runs. 
+At step 0, we initialized the reservoir state with a different random state vector. 
+After step 0, we subject the reservoir to the same input sequence for both scenarios.
+While the initial trajectory depends on the node's starting value, the neuron synchronizes to the input sequence entirely by step 75. 
+The node's evolution no longer depends on the initial value from that point onwards.
+
+
+
+% Fading memory can be recognized in many systems
+Fading memory can be recognized in physical dynamical systems as well.
+Oftentimes it is the result of a dampening force such as electrical resistance or drag.
+For example, \citet{nakajima_information_2015} implemented \acrshort{prc} using a silicone octopus arm submerged in water. 
+In their particular case, the. fluid resistance of the water tank exerts a dampening effect on the silicone arm, resulting in a fading memory.
+
+
+% The mathematical reason why this works is still being researched
+The understanding behind this property is that the response of many dynamical systems eventually synchronizes to the input signal, suppressing chaotic behavior \citep{nakajima_physical_2020}. 
+However, the mathematical understanding of the \acrshort{esp} and its relation to dynamical systems is still a topic of active research (see e.g.\ \cite{yildiz_re-visiting_2012, lu_attractor_2018}).

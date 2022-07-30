@@ -1,0 +1,28 @@
+
+% Types of plant models
+% Plant models exist in many shapes and sizes. 
+There exist many different types of plant models.
+To get an idea of the various model categories one can visit \textit{Quantitative Plant}\footnote[1]{https://www.quantitative-plant.org/model. See \citet{lobet_online_2013, lobet_image_2017} for more details.}, 
+a website that aggregates open-source plant models from the literature.
+Listed models range from crop surface models (\acrshort{csm}) that estimate biomass and crop yield from aerial imagery \citep{tilly_multitemporal_2014} to sub-plant models that simulate gas exchange between the canopy and the environment \citep{sinoquet_ratp_2001}.
+
+%%% TODO %%%
+
+% Selection criteria: single organism
+To select plant models for use in \acrshort{rc} experiments, they must meet certain criteria. 
+Firstly, the model must track the state of a single plant over time, 
+as the scope of the research presented limits the interpretation of the reservoir to a single organism.
+This rules out the use of e.g.\ crop surface models because they only inform about large populations of plants; in these models information on the level of an individual organism is lost (although it would certainly be interesting to apply reservoir computing principles to the ecological dynamics of a crop field).
+
+
+% Selection criteria: 3d anatomy
+Secondly, the plant's state should be observable from multiple fixed points of the plant's anatomy. 
+These observed points must be distinct structural elements of the plant that simulate the physiological processes of a real specimen and must communicate with one another as a dynamical system.
+We set this requirement because an RC system using a plant model as reservoir is intended to represent the equivalent setup in the real world.
+This requirement entails a preference for mechanistic models that make few prior assumptions about plant behavior, leaving macroscopic behavior to emerge naturally from microscopic interactions at the cellular level \citep{gauthier_functional_2020}.
+Ideally, the observable parameters of the plant are also empirically measurable \textit{in vivo} to enable the research results from this work to be better transferable to a real-world setting.
+
+
+% Selection criteria: time resolution
+Finally, the time resolution of the simulation should be sufficiently fine to observe dynamics at multiple time scales as well as avoid signal aliasing (see \mbox{Section \ref{section:rc-time-scales}}).
+

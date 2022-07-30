@@ -1,0 +1,33 @@
+The mathematical model of the Echo State Network (section \ref{subsection:esn}) can be generalized to describe any reservoir computer, physical or otherwise \citep{nakajima_physical_2020}. 
+Doing so will be helpful to determine what defines the RC system's computational capacity in the following sections. 
+This section establishes a mathematical vocabulary for describing any PRC model in discrete-time notation.
+
+The reservoir update function can be described as a function $f(\cdot, \cdot)$ that maps the previous reservoir state and the current input to a new reservoir state,
+ 
+\begin{equation} \label{prc:update}
+    \mathbf{x}[t] = f\left(\mathbf{x}[t-1], \mathbf{u}[t]\right) 
+\end{equation}
+
+where $\mathbf{x}$ describes the entire reservoir state at step $t$ and $\mathbf{u}$ represents all external factors that influence the dynamics of the reservoir substrate. 
+Assuming the reservoir dynamics result in emergent memory effects, it is possible to reformulate the reservoir state $\mathbf{x}$ as a function of the past inputs it has seen:
+
+\begin{equation} \label{prc:echo_input_function}
+    \mathbf{x}[t] = \phi(\mathbf{u}[t], \mathbf{u}[t-1], \mathbf{u}[t-2], \dots)
+\end{equation}
+
+This function $\phi$ is called the input echo function and is a key characteristic of each particular reservoir substrate. The target task is defined as any arbitrary function $T$ of the past time steps, thus requiring memory to solve:
+
+\begin{equation} \label{prc:target}
+    \mathbf{y}[t] = T(\mathbf{u}[t], \mathbf{u}[t-1], \mathbf{u}[t-2], \dots)
+\end{equation}
+
+Finally, the linear readout function $\psi$ is described as a learned approximation of $T$, based on the reservoir state:
+
+\begin{align} 
+    \psi(\mathbf{x}[t]) &= \psi \left( \phi(\mathbf{u}[t], \mathbf{u}[t-1], \mathbf{u}[t-2], \dots) \right) \label{prc:readout} \\
+    &\approx T(\mathbf{u}[t], \mathbf{u}[t-1], \mathbf{u}[t-2], \dots) = \mathbf{y}[t] \nonumber
+\end{align}
+
+It is important to note that the input echo function $\phi$ is surjective for virtually all reservoirs. 
+In other words, a unique sequence of inputs does not necessarily result in a sequence of unique reservoir states. 
+Not only is this natural, as no reservoir can have infinite memory of past events, Section \ref{section:esp} shows that this summarizing property of $\phi$ is vital to derive any meaningful computation from reservoir computers.

@@ -1,0 +1,35 @@
+
+\chapter{Physical Reservoir Computing} \label{chapter:lit-prc}
+
+\section{Reservoir Computing} \label{section:rc}
+\input{sections/prc/reservoir_computing} 
+
+\section{Physical Reservoir Computing} \label{section:prc}
+\input{sections/prc/physical_reservoir_computing} 
+
+\section{The Echo State Property} \label{section:esp}
+\input{sections/prc/echo_state_property}
+\input{figures/input_fading_explainer}
+
+\section{Time Scale of Reservoir Dynamics} \label{section:rc-time-scales}
+\input{sections/prc/rc_time_scales} 
+
+\section{Evaluating Reservoir Performance} \label{section:reservoir-eval}
+\input{sections/prc/prc_properties}
+
+\section{Simulation of Physical Reservoirs} \label{section:prc-simulation}
+\input{sections/prc/prc_simulation}
+
+\section{Summary} \label{section:prc-summary}
+
+This chapter showed how physical reservoir computing outsources computation to physical dynamical systems.
+This works thanks to the emergent computational qualities present in nonlinear dynamical behavior.
+A simple linear readout function is used to transform the reservoir's state into a useful output.
+In computer models, we can observe the reservoir state directly.
+In physical implementations, we observe the reservoir using sensor data.
+
+To perform useful computations, the reservoir must perform the suitable nonlinear transformations and convolutions to its inputs such that the problem becomes linear.
+Another condition for \acrshort{prc} is a fading memory of past inputs; Fading memory is essential to performing deterministic computations.
+
+To test whether a physical material is suitable for reservoir computing, we can design a suite of regression targets to quantify the reservoir's correlation with relevant computational tasks.
+In addition, we proposed two types of experiments for testing the fading memory condition: one measures the dependence on initial conditions, and the other measures the stationarity of the reservoir dynamics in time.

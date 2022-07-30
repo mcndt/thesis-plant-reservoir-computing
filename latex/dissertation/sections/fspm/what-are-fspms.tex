@@ -1,0 +1,46 @@
+
+% What are \acrshort{fspm}s?
+A promising category of models that can the stated criteria is that of functional-structural plant models (\acrshort{fspm}) \citep{godin_functionalstructural_2005, louarn_two_2020}.
+\acrshort{fspm} model the plant as a collection of interconnected units that represent a small structural part of the plant in space.
+These units interact with the environment and with each other to simulate eco-physiological processes \citep{coussement_turgor-driven_2020}. 
+The structural elements of the simulated plant form a hierarchy of interactions at different scales. Together they govern the macroscopic behavior of the organism \citep{louarn_two_2020}. Most \acrshort{fspm}s simulate interactions across a range of scales, from cell organelles to whole plant organs and even populations of multiple organisms. A schematic representation of the different scales of interactions is shown on Figure \ref{fig:fspm_scales_louarn2020}.
+
+\input{figures/fspm_scales_louarn2020}
+
+% [TODO: ADD ILLUSTRATION OF FSPM]
+
+
+% What are \acrshort{fspm}s for?
+Functional-structural plant models owe their success to more than two decades of interdisciplinary collaboration between biology, biophysics, ecology, and computer science \citep{louarn_two_2020}.
+At present, \acrshort{fspm}s have been applied in developmental biology \citep{cieslak_integrating_2016, schneider_light_2019, gauthier_functional_2020}, integrative and systems biology \citep{zhu_plants_2016, chang_systems_2019, millar_practical_2019} and applied plant sciences \citep{renton_modelling_2017, albasha_hydroshoot_2019, university_of_reading_uk_advances_2021}. 
+The accelerated development in this area of research is enabled by common frameworks that standardize the description of e.g.\ plant architecture \citep{godin_multiscale_1998, boudon_l-py_2012} and eco-physiological interactions \citep{fournier_caribu_2016, zhou_cplantbox_2020}. 
+Popular platforms for functional plant modelling workflows are OpenAlea \citep{pradal_openalea_2008, pradal_openalea_2015}, GroIMP \citep{vos_groimp_2007} and GreenLab \citep{de_reffye_two_2021}. 
+
+
+% What do \acrshort{fspm}s model?
+The precise set of simulated physiological processes varies from model to model. 
+Commonly modeled factors include hydraulic pressure, water and carbon flow, and photosynthesis \citep{coussement_turgor-driven_2020, zhou_cplantbox_2020, albasha_hydroshoot_2019}. 
+The complexity of the environmental simulation also differs between models, ranging from manual application of input values in root nodes \citep{zhou_cplantbox_2020} to ray-traced application of lighting conditions, including self-shading \citep{coussement_turgor-driven_2020}.
+Further still, some \acrshort{fspm}s model plant growth over the span of an entire growth season \citep{lecarpentier_walter_2019, coussement_turgor-driven_2020} where others assume a static plant geometry with predefined limits for simulation duration and model accuracy \citep{albasha_hydroshoot_2019}.
+
+
+% Some examples
+\mbox{Figure \ref{fig:plant_model_examples}} highlights a small selection of models from the literature.
+% Soybean FSPM
+First, Soybean FSPM \citep{coussement_turgor-driven_2020} is a highly detailed mechanistic plant growth model. 
+Soybean FSPM was developed to understand better a plant's macroscopic behavior in relation to water.
+The model simulates vegetative growth driven by hydrostatic pressure inside the plant cells and incorporates a ray-traced lighting model with dynamic lighting and shading conditions \mbox{(Figure \ref{fig:fspm-soybean-fspm})}. 
+% V-Mango
+V-Mango \citep{boudon_v-mango_2020} models the vegatative and reproductive development of mango trees to enable \textit{in silico} experimentation with better cultivation practices.
+The model allows researchers to understand why certain characteristics of mango trees make them more susceptible to pests and to study the influence of the three-dimensional tree architecture on fruit growth.
+% Other models.
+While this is far from an exhaustive list of what has been accomplished with FSPMs, it should give the reader an idea of what is possible with this first-principles approach to plant modeling.
+
+\input{figures/plant_model_examples}
+
+
+% Caution before reusing an FSPM from the literature
+An important caveat is that these models typically do not simulate a live plant as an accurate digital twin of an \textit{in vivo} plant.
+Instead, they are commonly developed with a specific research question in mind and model only the physiological processes that are deemed correlated to the studied phenomenon \citep{louarn_two_2020}.
+Hence, it is warranted to perform a careful comparison between the conditions and assumptions of the original study and those of a new context before reusing the model for tasks other than its original purpose.
+Note that digital twin initiatives are also an active line of research. For example, researchers at WUR have been developing a digital twin system for tomato plants \citep{npec_wur_2020}.

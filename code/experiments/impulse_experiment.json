@@ -1,0 +1,272 @@
+[
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width1__0",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width1__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width1__1500",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width1__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width2__0",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width2__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width2__1500",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width2__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width3__0",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width3__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width3__1500",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width3__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width4__0",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width4__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width4__1500",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width4__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width5__0",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width5__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-06-08__width5__1500",
+    "sdate": "2012-06-08",
+    "edate": "2012-06-18",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-06-08__width5__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width1__0",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width1__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width1__1500",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width1__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width2__0",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width2__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width2__1500",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width2__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width3__0",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width3__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width3__1500",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width3__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width4__0",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width4__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width4__1500",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width4__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width5__0",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width5__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-07-09__width5__1500",
+    "sdate": "2012-07-09",
+    "edate": "2012-07-19",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-07-09__width5__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width1__0",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width1__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width1__1500",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width1__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width2__0",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width2__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width2__1500",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width2__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width3__0",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width3__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width3__1500",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width3__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width4__0",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width4__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width4__1500",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width4__1500.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width5__0",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width5__0.input"
+  },
+  {
+    "path": "hydroshoot-prc-experiments/prc_experiment_templates/gdc_can1_nodeficit_fixedpredawn",
+    "length": 10,
+    "extend": false,
+    "name": "meteo_impulse__2012-08-19__width5__1500",
+    "sdate": "2012-08-19",
+    "edate": "2012-08-29",
+    "meteo": "hydroshoot-prc-experiments/prc_experiment_templates/meteo_files/meteo_impulse__2012-08-19__width5__1500.input"
+  }
+]

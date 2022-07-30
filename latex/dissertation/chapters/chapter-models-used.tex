@@ -1,0 +1,34 @@
+
+\chapter{Selected Plant Models} \label{chapter:models-used}
+
+% Chapter introduction
+For the reasons stated in Chapter \ref{chapter:exp-setup}, we conduct our experiments with \textit{in silico} plants.
+This chapter starts with a set of formal requirements that plant simulations must meet for use in physical reservoir computing.
+Then follows an overview of the FSPMs from the literature we have examined for use in this research.
+Finally, we introduce the final selection of models and compare their traits and characteristics.
+
+
+\section{Selection Criteria} \label{sec:model-selection-criteria}
+\input{sections/used-models/model-selection-criteria}
+
+
+\section{Related Work} \label{sec:models-considered}
+\input{sections/used-models/models-considered}
+
+
+\section{Selected Models} \label{sec:selected-models}
+\input{sections/used-models/selected-models}
+
+\section{Summary}
+
+First, we formalized the selection criteria to choose which plant models are suited for our research.
+We based these criteria on considerations from an \acrshort{rc}, a plant-physiological, and a practical perspective.
+Next, we held a brief discussion of each \acrshort{fspm} we considered from the literature.
+Then, we made a final selection of two models: HydroShoot and CN-Wheat.
+We introduced the background of each model and gave its implementation details.
+Finally, we summarized their properties relevant to our experiments: the environmental inputs, the available regression targets, and the observations that can be used as a reservoir.
+
+
+\input{tables/simulation_inputs}
+\input{tables/simulation_regression_tasks}
+\input{tables/simulation_reservoirs}

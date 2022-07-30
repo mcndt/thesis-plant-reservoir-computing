@@ -1,0 +1,60 @@
+
+% Introduction
+To recap Chapter \ref{chapter:lit-prc}: to solve a computational problem with a physical medium, it must possess two fundamental properties.
+The first is linear input separation relative to the target signal.
+A reservoir can achieve this by performing a nonlinear expansion of its environmental inputs.
+To perform tasks that require memory, the reservoir must also possess recurrent dynamics; 
+the reservoir integrates current inputs with its memory of the past.
+The second requirement is a fading memory of past inputs.
+Without a fading influence of past inputs, computations carried out by the reservoir cannot consistently be reproduced.
+The question remains: do plants display these properties?
+
+
+% Input separation and nonlinearity
+First, we consider linear input separation.
+To make a target a linear function of the reservoir state, the reservoir must perform some nonlinear transformation of its inputs.
+An example of this in plants is how grass responds to soil temperature. 
+The growth rate of grass shows a roughly parabolical relationship with soil temperature, reaching an optimum around roughly 15-20\degree C, after which growth declines due to heat stress \citep{hurtado-uria_relationships_2013}.
+This shows that a plant's behavior can show a nonlinear relation with its environment.
+
+
+% Fading memory
+Next, we consider the fading memory property.
+Clearly, this rule does not hold for the general case; a plant temporarily subjected to extreme cold or heat will die and no longer process any information.
+Favorable environmental conditions will influence the plant's growth rate, permanently altering reservoir dynamics as a function of past inputs.
+Nonetheless, we might be able to identify operating ranges for specific eco-physiological processes and time scales for which the fading memory property holds up approximately.
+
+
+% Reconciling dynamic reservoirs with the static reservoir assumption
+In addition to the properties above, the \acrshort{prc} framework assumes the reservoir dynamics are unchanging over time.
+Naturally, changing the reservoir's constitution also changes its nonlinear characteristics and memory capacity.
+Plants are not stationary reservoirs in the general case because they go through several growth phases that change their structure and behavior drastically.
+But here, too, we can approximate stationarity by investigating reservoir dynamics within a time window for which the growth rate is negligible.
+
+
+% Conclusion
+In conclusion, there is sufficient evidence to suggest that plants can display computational properties for eco-physiologically relevant tasks.
+However, plant RC research is still in its infancy. It remains unexplored under which conditions the RC framework applies to plant behavior and what subset of eco-physiological processes show reservoir-like dynamics.
+
+
+\subsection{Research Objectives}
+
+% Objectives
+\citet{pieters_reservoir_2022} has already demonstrated that plants can function as a medium for reservoir computing.
+This work aims to expand on the foundation for plant \acrshort{rc}. 
+We aim to answer the following questions:
+From the subset of plant physiological processes that are empirically observable, which processes show promising input separation for eco-physiological tasks and computational benchmarks? 
+And do these properties display the fading memory principle at the relevant time scale?
+To answer these questions, we propose a framework for quantitatively measuring the reservoir properties of the plant's physiological functions.
+This framework enables direct comparison of the reservoir performance of different physiological processes and across multiple plants.
+
+
+% Why use in silico plants?
+We used \acrshort{fspm}s to test this framework. 
+Using simulated plant has several advantages.
+It gives us the freedom to observe the plant directly, without the need for sensing technology and laboratory setups.
+Consequently, it speeds up the research process and gives us a first intuition into suitable plant reservoirs. 
+This can help bootstrap future \textit{in vivo} research.
+In addition, we believe that \acrshort{rc} can contribute to the plant modeling community by identifying potential weaknesses in \acrshort{fspm}s.
+The reason is that RC can be used for analyzing short-term as well as large scale variations; whereas current modeling efforts focuses only on long term behavior,
+even though research shows that rapid physiological responses play an essential role in plant life \citep{alarcon_substantial_1994, deswaef2015a}.

@@ -1,0 +1,26 @@
+% PRC requirements
+
+Section \ref{fspm:selecting-models-for-rc} already formulated the general requirements of a plant model for use in the \acrshort{prc} framework.
+This section now formalizes the search criteria from the point of view of the experiments we wish to conduct. 
+The selected models must meet the following specifications:
+% From the point of view of the experiments we wish to conduct, plant models must meet the following requirements:
+
+\begin{enumerate}
+    \item \textbf{Modeled as a dynamical system.} To observe reservoir dynamics, there must be a dynamical relationship between the structural elements of the plant.
+    \item \textbf{Local observability of eco-physiological processes.} To create a readout of the reservoir, standard eco-physiological functions, such as surface temperature, transpiration rate, and stomatal conductance, must be observable at each of the discrete elements of the plant.
+    \item \textbf{Sufficiently small simulation steps.} Small simulation steps can reveal dynamics that occur at shorter time scales. Ideally, we can observe dynamics at the second to hour scale.
+    \item \textbf{(Pseudo-)static reservoir.} \acrlong{rc} assumes the reservoir dynamics are unchanging through time. To satisfy this condition, we limit our search to plant models l Research on the effect of plant growth on reservoir dynamics is out of scope for this research.
+    \item \textbf{Practically observable physiological processes.} Section \ref{sec:considered-reservoirs} explained that there is a preference for models that simulate physiological processes which we can observe using existing (contactless) sensing technologies. 
+\end{enumerate}
+
+The first and second requirements are met by narrowing the search to functional-structural plant models, as was established in Chapter \ref{chapter:fspm}.
+However, we must evaluate the third, fourth, and fifth conditions on a case-by-case basis.
+For the fifth condition, Tables \ref{table:imaging-techniques} and \ref{table:non-imaging-techniques} can be used to determine which models to consider.
+
+
+% Practical requirements
+Some additional requirements arise from a practical aspect. 
+First, the plant simulation must be able to run for a large number of time steps. 
+This is needed to build a sufficiently large dataset to train readout models on. 
+Also, observing fading memory effects requires a sufficient length of simulated steps.
+Second, the model software must be easily adapted to extract the evolution of the reservoir state during simulation and store it in a time series dataset.

@@ -1,0 +1,53 @@
+% Where does RC come from?
+Reservoir computing (\acrshort{rc}) is a machine learning method proposed in the early 2000s as an alternative to training recurrent neural networks (\acrshort{rnn}) \citep{jaeger_echo_2002}. 
+Training weights in recurrent networks requires computationally expensive and highly linear training algorithms such as backpropagation-through-time (\acrshort{bptt}). 
+Moreover, \acrshort{bptt} often suffers from numerical instability and often yields suboptimal solutions \citep{bengio_learning_1994}.
+
+In the \acrshort{rc} framework, the untrained \acrshort{rnn} (called the reservoir) is interpreted as a black box dynamical system.
+Input signals are transformed by the nonlinear activations of the neurons and are integrated with the past state of the reservoir through recurrent connections \citep{jaeger_harnessing_2004}.
+As a result, the reservoir displays both nonlinear behavior and memory capacity.
+We can then exploit these properties to solve a variety of regression tasks.
+
+
+% What does an RC model look like?
+\mbox{Figure \ref{fig:rc_diagram}} shows a diagram of a general \acrshort{rc} model using an \acrshort{rnn} as the reservoir.
+To accomplish regression tasks, an \acrshort{rc} model consists of two parts: the nonlinear reservoir that transforms environmental inputs and a linear readout function that observes the reservoir to perform a given task. 
+The linear readout function observes the state of the reservoir and applies a linear regression model to determine the final output. 
+When there is no feedback from the readout function back to the reservoir, it is possible to train multiple readouts that perform different tasks based on the same reservoir dynamics.
+
+\input{figures/rc_diagram}
+
+
+% What makes RC work?
+The key to understanding reservoir computing is that all non-linearity and memory required to solve a given task are already present in the reservoir dynamics. 
+The readout function then learns to distill the information present in the observed reservoir state to solve a given task. 
+In this way, \acrshort{rc} is similar to the kernel method from classical machine learning, where the reservoir acts as a nonlinear expansion and temporal convolution of the input signals \citep{hermans_recurrent_2012}. 
+However, kernel techniques do not account for time explicitly, whereas reservoir computing inherently occurs in the time domain. 
+This strong connection to the time domain makes \acrshort{rc} particularly useful for solving tasks with time series data and real-time applications.
+
+
+% RC is data-efficient and easier to train.
+In its original form, the neurons inside the reservoir are randomly connected and are generally not trained. 
+However, there is literature that proposes task-independent tuning schemes that improve the stability of the reservoir \citep{lukosevicius_reservoir_2009, norton_preparing_2006, tanaka_effect_2020}.
+Reservoir computing models are notably more data-efficient and easier to train because there is no need to train the recurrent part of the network using complex and data-hungry algorithms such as \acrshort{bptt}.
+
+
+% Concrete frameworks for implementing reservoir computing.
+The literature has proposed several implementations of reservoirs.
+The echo state network (\acrshort{esn}), as proposed by \citet{jaeger_echo_2002}, is a purely mathematical implementation where neuron activations are determined as a nonlinear function of the weighted sum of incoming connections. 
+\acrshort{esn}s operate in discrete time only and are ideal for software implementations.
+Subsection \ref{subsection:esn} gives a detailed mathematical description of the echo state network.
+Independently, \citet{maass_real-time_2002} proposed the liquid state machine (\acrshort{lsm}), an idea that originated from computational neuroscience.
+In this model, the recurrent network is formed by spiking neurons that can operate in both discrete and continuous time.
+The neurons receive spike trains (discrete events in time) as input and generate an output sequence of spikes accordingly.
+A third approach proposed by \citet{steil_backpropagation-decorrelation_2004} is called Backpropagation-Decorrelation (\acrshort{bpdc}). 
+It is a learning algorithm for online training of the readout weights.
+
+
+\subsection{Echo State Network} \label{subsection:esn}
+
+\input{sections/prc/echo_state_network}
+
+\subsection{Applications} \label{subsection:rc_applications}
+
+\input{sections/prc/rc_applications}

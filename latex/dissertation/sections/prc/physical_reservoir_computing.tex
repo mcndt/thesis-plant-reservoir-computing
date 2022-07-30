@@ -1,0 +1,29 @@
+
+% What is physical reservoir computing?
+The RC model easily extends to the physical world by interpreting physical systems that exhibit nonlinear dynamics and memory effects as a reservoir substrate  \citep{nakajima_physical_2020}. 
+In other words, this Physical Reservoir Computing (PRC) framework aims to exploit dynamics found in the natural world to perform computational tasks. 
+% How is RC transferred to the real world?
+\mbox{Figure \ref{fig:prc_examples}} shows a mapping of the RNN-based RC architecture to two physical applications from the literature and the plant RC case discussed in this thesis.
+In the physical systems (\mbox{Figures \ref{fig:prc_examples}}b, c, and d), it is impossible to observe the complete state of the reservoir as in the RNN-based reservoir. 
+Instead, the reservoir state is inferred from sensor data observing the dynamical system in real-time \citep{burms_reward-modulated_2015, nakajima_information_2015}.
+
+\input{figures/prc-illustration}
+
+% What applications have been made with PRC?
+PRC is a field of interdisciplinary research, implementing reservoirs using a large variety of materials \citep{tanaka_recent_2019}.
+Examples of substrates being researched are analog electrical circuits \citep{soriano_minimal_2015, zhao_novel_2016}, FPGAs \citep{antonik_application_2018}, memristive circuits \citep{walter_neuromorphic_2015}, photonic circuits \citep{van_der_sande_advances_2017}, spintronics \citep{torrejon_neuromorphic_2017}, and soft body robotics \citep{caluwaerts_body_2011, caluwaerts_design_2014, nakajima_soft_2013}.
+Biological reservoirs are closely investigated as well, with a particular interest in neurobiology \citep{hafizovic_cmos-based_2007, hinaut_real-time_2013} and ecological dynamics \citep{jones_is_2007, didovyk_distributed_2015,ushio_computational_2021}. 
+Most recently, \citet{pieters_plants_2021} demonstrated promising results in the use of \textit{in vivo} plants as reservoir substrate.
+
+
+% What is the goal of PRC research?
+A common misconception about PRC research is that the goal is to achieve general-purpose computation with unconventional reservoirs. 
+However, the aim is not to outperform silicon computers at carrying out generic calculations. 
+Instead, in most cases, the goal is to bypass the need for precise modeling of a physical system by observing how the system responds to inputs rather than attempting to predict how the inputs influence the state of the system \citep{nakajima_physical_2020}.
+This method is particularly applicable in real-time control scenarios such as robotics, where real-time integration of sensor data is more feasible than power-hungry physics simulations (see e.g.\ \cite{caluwaerts_design_2014, burms_reward-modulated_2015}), 
+or for the prediction of chaotic systems where powerful computers are not able to predict the system better than low-powered reservoir models \citep{gauthier_next_2021}.
+
+
+\subsection{Generalized Mathematical Model} \label{section:rc-general}
+
+\input{sections/prc/generalized_rc_model}

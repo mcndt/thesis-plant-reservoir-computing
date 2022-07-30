@@ -1,0 +1,82 @@
+
+% Introduction
+In this section, we propose our framework for quantitatively measuring input separation and fading memory properties of eco-physiological processes in plants.
+With these methods we will compare the capabilities of different processes.
+The results will highlight which observable plant properties to pursue in future \acrshort{rc} research.
+
+
+\subsection{Input Separation}
+
+% **FIGURES:**
+% - Table of regression tasks to carry out (or not)
+
+% Introduction
+First, we measure the linear input separation of the reservoir w.r.t.\ various target tasks.
+We propose a collection of regression targets based on the environment and physiological state of the plant.
+We choose these tasks to test the reservoir's capacity to solve biological problems.
+Classification tasks are not considered because they are less relevant from an eco-physiological standpoint; 
+most processes are real-valued and occur in continuous time.
+We fit a simple linear readout model to the reservoir observations to test the prediction accuracy.
+We then compare the predicted series against the ground truth data to compute an accuracy metric.
+
+
+% Regression tasks
+To paint a complete picture of the reservoir, we use a mix of target tasks.
+We propose three categories of targets, previously established by \citet{pieters_reservoir_2022}: (i) environmental inputs, (ii) eco-physiological state, and (iii) computational benchmarks.
+Predicting environmental inputs gives us a first indication of the plant's coupling with the environment.
+For example, we can use ambient temperature, incident solar radiation or relative humidity as a prediction target.
+Next, eco-physiological tasks indicate whether the observed reservoir is effective for solving biological problems.
+Targets in this category can be, e.g.\ transpiration rate or photosynthesis rate on the organism level.
+Finally, computational benchmarks measure a reservoir's degree of nonlinearity and memory.
+We propose three targets: a delay line to measure memory capacity (\mbox{Equation \ref{prc:delay-line-benchmark}}), a polynomial expansion to measure nonlinearity (Equation \ref{prc:polynomial-benchmark}), and the NARMA benchmark to measure both properties (\mbox{Equation \ref{prc:narma-timescale-adapted}}).
+Each artificial target uses an environmental series as input.
+These targets are not practical tasks for a plant, but the results can help contextualize plants in the broader \acrshort{prc} literature.
+
+
+% Readout model
+We fit a linear readout model for every reservoir-target combination.
+For the readout model we propose a simple linear regression model with a bias term:
+
+\begin{equation}
+\hat{y}[t] = \mathbf{W}^{\text{out}}\left[1;\mathbf{X}[t] \right] \label{methods:readout}
+\end{equation}
+
+To isolate the computational capacity of the reservoir from the natural correlation between the target and the environment, the environmental inputs are not fed into the readout model; the prediction relies on the reservoir only.
+Model parameters \(\mathbf{W}^{\text{out}}\) are fitted to training data using ridge regression (\mbox{Equation \ref{esn:training}}).
+The regularization \(\lambda\) parameter is tuned for each reservoir-target pairing. 
+To find the optimal \(\lambda\), we propose a parameter sweep with logarithmic spacing, validated using cross-validation on the training data.
+
+% Evaluation metric
+We evaluate the reservoir performance on a set of held-out test data. 
+Prediction accuracy is measured using the \acrfull{nmse} metric:
+
+\begin{equation}
+\text{NMSE} = \frac{1}{N} \sum_{t=1}^{N} \frac{\left(y[t] - \hat{y}[t]\right)^{2}}{\text{var}(y)} \label{methods:regression_nmse}
+\end{equation}
+
+A lower score means a more accurate prediction.
+The \acrshort{nmse} has several advantages over regular \acrshort{mse} \citep{pieters_reservoir_2022}.
+Because it is normalized, the results can be compared across reservoir-target pairings, including between plants.
+It is also easy to interpret: a perfect predictor scores 0.0, while predicting the signal mean for every step yields a score of 1.0.
+
+
+\subsection{Fading Memory}
+
+% Introduction 
+To test fading memory, we propose the impulse experiment described in Section \ref{sec:fading_memory} and illustrated in Figures \ref{fig:memory_input_impulse} and \ref{fig:memory_esn_impulse}.
+The impulse can be applied to any of the environmental inputs.
+The amplitude and duration of the impulse should remain within realistic boundaries so that an actual plant would not suffer permanent damage that alters the reservoir dynamics.
+
+
+% Evaluation metric
+To quantitatively measure the divergence $\delta(t)$ between two reservoir trajectories at a given time step, we propose a modified \acrshort{nmse} metric:
+
+\begin{equation} \label{methods:reservoir_divergence}
+    \delta(t) = \frac{1}{N} \sum_{i=1}^{N} \frac{\left( \mathbf{X}_i^{C}(t) - \mathbf{X}_i^{E}(t) \right)^{2}}{\text{var}\left( \mathbf{X}_i^{C} \right)}
+\end{equation}
+
+Where $N$ is the size of the observed reservoir, $\mathbf{X}^{C}$ the reservoir state in the control experiment, and $\mathbf{X}^{E}$ the reservoir state during the impulse experiment.
+We can use a line plot of the divergence during and after the impulse to inspect the fading memory property of the reservoir.
+A reservoir affected by the impulse should show a peak in divergence once the impulse is applied.
+If the physiological process displays fading memory, the divergence should go down to pre-impulse levels in a finite amount of time after the artificial stimulus is removed.
+Note that a substantial divergence between reservoirs subjected to the same inputs also indicates the echo state property may not hold.

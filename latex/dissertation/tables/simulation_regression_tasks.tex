@@ -1,0 +1,71 @@
+
+\begin{table}[!ht]
+    \raggedright
+    \caption[Comparison of HydroShoot and CN-Wheat: available regression tasks.]{Comparison of HydroShoot and CN-Wheat: available regression tasks. Check marks indicate whether the target is computed by the FSPM. Targets annotated with $\ast$ are not calculated in the simulation, but can be computed from other simulation outputs.}
+    \label{table:simulation_regression_tasks}
+    \def\arraystretch{1.2}
+    \begin{tabularx}{\textwidth}{
+        >{\centering\arraybackslash} c
+        >{\raggedright\arraybackslash} X
+        >{\centering\arraybackslash} c
+        >{\centering\arraybackslash} c
+        >{\centering\arraybackslash} c
+    }
+        \toprule
+        \textbf{Symbol} & \textbf{Description} & \textbf{Unit} & \textbf{HydroShoot} & \textbf{CN-Wheat} \\ 
+        \midrule
+        \arrayrulecolor{black!10!white}
+        \(E\) & Transpiration rate rate & \unit{\gram\per\hour} & \checkmark & \checkmark \\
+        \midrule
+        \(A_n\) & Net photosynthesis rate & \unit{\micro\mol\per\s} & \checkmark &  \\
+        \midrule
+        \(T_{\text{leaf}}\) & Mean leaf temperature & \unit{\celsius} & \checkmark & $\ast$ \\
+        \midrule
+        \multirow{2}{*}{\(\Phi_{\text{PAR}}\)} & \multirow{2}{*}{Absorbed \acrshort{par}} & \unit{\watt\per\meter\squared} & \checkmark &  \\
+        % \midrule
+        & & \unit{\micro\mol\per\s} & & $\ast$ \\
+        \midrule
+        \(R_{\text{shoot}}\) & Shoot respiration & \unit{\micro\mol\of{C}\per\second} & & \checkmark  \\
+        \midrule
+        \(R_{\text{roots}}\) & Root respiration & \unit{\micro\mol\of{C}\per\second} &  & \checkmark  \\
+        \arrayrulecolor{black}
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+% \multirow{6}{6cm}{thermal camera}
+
+
+% \begin{table}[!ht]
+%     \raggedright
+%     \caption{Comparison of HydroShoot and CN-Wheat: available regression tasks. Targets annotated with $\ast$ are not calculated in the simulation, but can be computed from other simulation outputs.}
+%     \label{table:simulation_regression_tasks}
+%     \def\arraystretch{1.2}
+%     \begin{tabularx}{\textwidth}{
+%         >{\centering\arraybackslash} c
+%         >{\raggedright\arraybackslash} X
+%         >{\centering\arraybackslash} c
+%         >{\centering\arraybackslash} c
+%         >{\centering\arraybackslash} c
+%     }
+%         \toprule
+%         \textbf{Symbol} & \textbf{Description} & \textbf{Unit} & \textbf{HydroShoot} & \textbf{CN-Wheat} \\ 
+%         \midrule
+%         \arrayrulecolor{black!10!white}
+%         \(E\) & Transpiration rate rate & \unit{\gram\per\hour} & \checkmark & \checkmark \\
+%         \midrule
+%         \(A_n\) & Net photosynthesis rate & \unit{\micro\mol\per\s} & \checkmark &  \\
+%         \midrule
+%         \(T_{\text{leaf}}\) & Mean leaf temperature & \unit{\celsius} & \checkmark & $\ast$ \\
+%         \midrule
+%         \(\Phi_{R_g}\) & Absorbed solar irradiance & \unit{\watt\per\meter\squared} & \checkmark &  \\
+%         \midrule
+%         \(\Phi_{I_\text{PAR}}\) & Absorbed \acrshort{par} & \unit{\micro\mol\per\s} & & $\ast$ \\
+%         \midrule
+%         \(R_{\text{shoot}}\) & Shoot respiration & \unit{??} & & \checkmark  \\
+%         \midrule
+%         \(R_{\text{roots}}\) & Root respiration & \unit{??} &  & \checkmark  \\
+%         \arrayrulecolor{black}
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}

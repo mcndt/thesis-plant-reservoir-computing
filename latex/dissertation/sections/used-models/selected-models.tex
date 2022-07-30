@@ -1,0 +1,108 @@
+
+\subsection{HydroShoot}
+
+% Overview
+HydroShoot is an FSPM of \textit{Vitis vinifera}, otherwise known as the common grapevine.
+It was published by \citet{albasha_hydroshoot_2019} as a study of the gas exchange of large plant canopies under water deficit conditions and to compare the effectiveness of different canopy shapes.
+It is written in the Python programming language and is built on the OpenAlea platform.
+ 
+
+% Functional architecture
+HydroShoot consists of three main modules, simulating the water potential across structural segments, the energy budget of individual leaves, and transpiration and carbon assimilation of individual leaves.
+Hydraulic pressure gradients across elements induce water flow, creating dynamical behavior between the elements.
+The authors experimentally validated that gas exchange, leaf hydraulic pressure, and temperature are adequately simulated during daytime hours.
+However, the model is prone to underestimate leaf temperature during nighttime hours.
+Nonetheless, on the surface, HydroShoot appears to be a realistic simulation of plant dynamics and thus a good candidate for \acrshort{rc} research.
+
+
+% Description of structural architecture
+The model uses a static, predefined structure. 
+The geometry is hand-modeled, based on measurements taken from real grapevine specimens.
+Figure \ref{fig:hydroshoot-archi} shows an example of one of the canopy configurations modeled for HydroShoot.
+Because HydroShoot does not simulate plant growth or tissue death, we should expect it to behave as an idealized static reservoir.
+The entire structure consists of hundreds of elements, about three hundred of which are photosynthesizing leaves, depending on the 3D model.
+
+
+% Model inputs
+HydroShoot uses hourly meteorological inputs of solar incident shortwave irradiance (PAR), air temperature ($T_{\text{air}}$), relative humidity (RH), wind speed ($u$), CO$_2$ concentration, and atmospheric pressure ($P_a$).
+However, in the simulations for the 2019 publication, the latter two are fixed to values of \SI{400}{ppm} and \SI{101.3}{kPa} respectively.
+
+
+% Simulation details
+The simulations in the original publication ran for four days with hourly time steps.
+In correspondence with the authors, R. Albasha informed us that the model has been used in simulations up to one month in length, using \SI{2}{h} steps during the day and a \SI{12}{h} step for nighttime.
+However, extending the simulation time requires modeling recurrent soil water potential over a longer time than is provided in the original simulation, which is out of scope for this work.
+As a compromise, we ran the model in runs of 7 days with a simplified model of constant recurrent soil water potential (see \mbox{Appendix \ref{app:hydroshoot-sim-details}}).
+
+
+\subsection{CN-Wheat}
+
+% What is CN-Wheat?
+CN-Wheat is a mechanistic model of \textit{Triticum aestivum}, more widely known as common wheat.
+CN-Wheat was developed by \citet{barillot_cn-wheat_2016} and is also built on the OpenAlea platform.
+The model was created to simulate carbon (C) and nitrogen (N) metabolism in wheat culms in the post-flowering stages of development.
+
+
+% Breakdown of CN-Wheat's physiological model
+The model simulates a rich set of eco-physiological processes that drive the C and N lifecycle inside the plant. 
+This includes photosynthesis and transpiration, synthesis of CN metabolites, metabolite transport in phloem tissue, and interaction between metabolites and the root system.
+The network of phloem tissue is simplified as a shared pool of C and N that facilitates communication between the functional-structural elements.
+This simplified transport model limits flow dynamics to the gradients between the elements and this shared pool of resources.
+It reduces the potential for more intricate dynamics within the network, such as the local influence of neighboring elements over each other's behavior.
+
+
+% Breakdown of CN-Wheat's structural architecture
+Figure \ref{fig:cnwheat-archi} depicts the entire structural architecture of the CN-Wheat crop.
+The modest structure consists of less than twenty explicitly observable organs.
+From this set, only 10-12 organs track eco-physiological functions that are of interest for reservoir computing;
+processes such as carbon accumulation are linear and trivially show no fading memory properties.
+Because the model assumes a post-flowering growth stage, C and N are only expended to grow grains and roots, while other elements are fixed in mass.
+Eco-physiological dynamics may still be affected by a sub-model simulating tissue death, affecting the total green area of the specimen.
+
+
+% What are the inputs that drive the model dynamics
+CN-Wheat uses the following hourly meteorological inputs: incident photosynthetically active radiation (PAR), air temperature ($T_{\text{air}}$), relative humidity ($RH$), air  CO$_2$ concentration, and wind speed ($u$).
+The model also considers the relative distribution of \acrshort{par} among the photosynthetic organs.
+In the used simulations, CO$_2$ concentration is fixed to \SI{360}{ppm} for all time steps.
+
+
+% Summary of the simulation details.
+In our experiments, we adopted the NEMA (Nitrogen Economy Model within plant Architecture) simulation configurations used in the original 2016 publication.
+The simulations examine the behavior of the plant under three different fertilization regimes. 
+In this configuration, the model runs for up to 50 simulated days at a time scale of hourly steps.
+
+\input{figures/selected_models}
+
+\subsection{Simulation Details}
+
+Table \ref{table:simulation_details} compares the simulation details of both \acrshort{fspm}s.
+HydroShoot's simulation length is relatively short, so the simulation must be run multiple times using different meteorological inputs to generate a large enough dataset.
+Because of HydroShoot's large size, we will limit our observations to a small selection of leaf elements.
+While CN-Wheat only has fifteen elements, we must use an even smaller subset as the reservoir because some physiological targets are a linear function of the elements. 
+
+\input{tables/simulation_comparison}
+
+\subsection{Environmental Inputs}
+
+The environmental inputs of both models are listed in Table \ref{table:simulation_inputs}.
+Significant abiotic factors are present in both models: air temperature, relative air humidity, wind speed and incident sunlight.
+CO$_2$ concentration and atmospheric pressure are model inputs but use constant values during simulation. 
+The available wind speed data for CN-Wheat varies daily instead of hourly, making it unsuited as a regression target or input to computational benchmarks.
+
+% \input{tables/simulation_inputs}
+
+\subsection{Regression Targets}
+
+Table \ref{table:simulation_regression_tasks} lists the physiological regression targets that can be used for each model. 
+To create more overlap between the two models, it is possible to calculate some targets not present in CN-Wheat from the observed structural elements.
+
+% \input{tables/simulation_regression_tasks}
+
+\subsection{Available Reservoirs}
+
+The observable physiological processes for HydroShoot and CN-Wheat are presented in Table \ref{table:simulation_reservoirs}.
+We limited the table to processes that would be experimentally observable, as listed in Tables \ref{table:imaging-techniques} and \ref{table:non-imaging-techniques}. 
+Both models track the photosynthesis rate, surface temperature, transpiration rate, and stomatal conductance. 
+HydroShoot has some additional hydraulic processes available.
+
+% \input{tables/simulation_reservoirs}

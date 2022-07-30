@@ -1,0 +1,37 @@
+
+\begin{table}[!ht]
+    \raggedright
+    \caption{\acrshort{fspm}s we explored for use in RC experiments. Models highlighted in bold are used for the final results presented in this work.}
+    \def\arraystretch{1}%  1 is the default, change whatever you need
+    \begin{tabular}{
+        >{\raggedright} m{0.166\linewidth}
+        >{\raggedright\arraybackslash} m{0.14\linewidth} 
+        >{\centering\arraybackslash} m{0.1\linewidth}
+        >{\centering\arraybackslash} m{0.11\linewidth}
+        >{\raggedright\arraybackslash} m{0.166\linewidth}
+        >{\centering\arraybackslash} m{0.13\linewidth}
+    }
+        \toprule
+        \textbf{Model} & \textbf{Crop} & \textbf{Growth} & \textbf{Time Step} & \textbf{Implementation} & \textbf{Open Source} \\ 
+        \midrule
+        PlaNet-Maize \citep{lobet_modeling_2014} & Maize & Yes & \SI{1}{h} & Java & Yes \\
+        \arrayrulecolor{black!10!white}
+        \midrule
+        \textbf{CN-Wheat \citep{barillot_cn-wheat_2016}} & \textbf{Common wheat} & \textbf{No} & \textbf{1 h} & \textbf{Python (OpenAlea)} & \textbf{Yes} \\
+        \midrule
+        \textbf{HydroShoot \citep{albasha_hydroshoot_2019}} & \textbf{Common grapevine} & \textbf{No} & \textbf{1 h} & \textbf{Python (OpenAlea)} & \textbf{Yes} \\
+        \midrule
+        WALTer \citep{lecarpentier_walter_2019} & Common wheat & Yes & \SI{1}{d} & Python (OpenAlea) & Yes \\
+        \midrule
+        Soybean FSPM \citep{coussement_turgor-driven_2020} & Soybean & Yes & \SI{1}{h} & Java (GroIMP) & No \\
+        \midrule
+        V-Mango \citep{boudon_v-mango_2020} & Mango tree & Yes & \SI{1}{d} & Python (OpenAlea), R & Yes \\
+        \midrule
+        WheatFspm \citep{gauthier_functional_2020} & Common wheat & Yes & \SI{1}{h} & Python (OpenAlea) & Yes \\ 
+        \midrule
+        \citet{prieto_functionalstructural_2020} (unnamed) & Common grapevine & No & \SI{1}{h} & Python (OpenAlea) & No \\
+        \arrayrulecolor{black}
+        \bottomrule
+    \end{tabular}
+    \label{table:models-related-work}
+\end{table}

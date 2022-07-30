@@ -1,0 +1,69 @@
+\begin{table}[!ht]
+    \raggedright
+    \caption{Comparison of HydroShoot and CN-Wheat: environmental models.}
+    \label{table:simulation_inputs}
+    \def\arraystretch{1.2}
+    \begin{tabularx}{\textwidth}{
+        >{\centering\arraybackslash} c
+        >{\raggedright\arraybackslash} X
+        >{\centering\arraybackslash} c
+        >{\centering\arraybackslash} c
+        >{\centering\arraybackslash} c
+    }
+        \toprule
+        \textbf{Symbol} & \textbf{Description} & \textbf{Unit} & \textbf{HydroShoot} & \textbf{CN-Wheat} \\ 
+        \midrule
+        \(T_{\text{air}}\) & Air temperature & \unit{\celsius} & Hourly & Hourly \\
+        \arrayrulecolor{black!10!white}
+        \midrule
+        \(\text{RH}\) & Relative humidity & \unit{\percent} & Hourly & Hourly \\
+        \midrule
+        \(u\) & Wind speed & \unit{\meter\per\second} & Hourly & Daily \\
+        \midrule
+        \multirow{2}{*}{\(\text{PAR}\)} & \multirow{2}{*}{\acrlong{par}} & \unit{\watt\per\meter\squared} & Hourly & / \\
+        % \midrule
+        & & \unit{\micro\mole\of{photons}\per\square\metre\per\second} & / & Hourly  \\
+        \midrule
+        CO\textsubscript{2} & CO\textsubscript{2} concentration & \unit{\micro\mole\of{CO\textsubscript{2}}\per\mol} & \SI{400}{ppm} & \SI{360}{ppm} \\
+        \midrule
+        \(P_a\) & Atmospheric pressure & \unit{\kilo\pascal} & \SI{101.3}{\kilo\pascal} & / \\
+        \arrayrulecolor{black}
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+% \multirow{6}{6cm}{thermal camera}
+
+% \begin{table}[!ht]
+%     \raggedright
+%     \caption{Comparison of HydroShoot and CN-Wheat: environmental models.}
+%     \label{table:simulation_inputs}
+%     \def\arraystretch{1.2}
+%     \begin{tabularx}{\textwidth}{
+%         >{\centering\arraybackslash} c
+%         >{\raggedright\arraybackslash} X
+%         >{\centering\arraybackslash} c
+%         >{\centering\arraybackslash} c
+%         >{\centering\arraybackslash} c
+%     }
+%         \toprule
+%         \textbf{Symbol} & \textbf{Description} & \textbf{Unit} & \textbf{HydroShoot} & \textbf{CN-Wheat} \\ 
+%         \midrule
+%         \(T_{\text{air}}\) & Air temperature & \unit{\celsius} & Hourly & Hourly \\
+%         \arrayrulecolor{black!10!white}
+%         \midrule
+%         \(\text{RH}\) & Relative humidity & \unit{\percent} & Hourly & Hourly \\
+%         \midrule
+%         \(u\) & Wind speed & \unit{\meter\per\second} & Hourly & Daily \\
+%         \midrule
+%         \(R_g\) & Shortwave irradiance & \unit{\watt\per\meter\squared} & Hourly & / \\
+%         \midrule
+%         \(I_{\text{PAR}}\) & \acrlong{par} & \unit{\micro\mole\of{photons}\per\square\metre\per\second} & / & Hourly  \\
+%         \midrule
+%         CO\textsubscript{2} & CO\textsubscript{2} concentration & \unit{\micro\mole\of{CO\textsubscript{2}}\per\mol} & \SI{400}{ppm} & \SI{360}{ppm} \\
+%         \midrule
+%         \(P_a\) & Atmospheric pressure & \unit{\kilo\pascal} & \SI{101.3}{\kilo\pascal} & / \\
+%         \arrayrulecolor{black}
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}

@@ -1,0 +1,60 @@
+
+\chapter{Conclusion} \label{chapter:discussion}
+
+% **Introduction:**
+The previous chapter reported the quantitative results of our experiments along with our interpretation of the data and a discussion of their implications.
+This chapter offers broader conclusions to the experiments we conducted.
+% We also point out potential weaknesses in our experimental setup and how they could be mitigated in future work.
+Then, we briefly recap the weaknesses we found in mechanistic plant models and how they can be improved.
+Finally, we propose a few directions for future research and potential applications of plant RC.
+
+
+% **Results implications:**
+\section{Implications of the Results}
+
+Our experiments showed promising results for plant RC with several plant physiological processes.
+% We observed similar results for each of the processes we considered.
+To pick reservoirs for future research, we recommend cross-referencing our results of reservoir performance with available sensing technologies to select the physiological reservoir with the highest potential.
+For example, surface temperature, transpiration rate, and stomatal conductance form a good combination of reservoir features because they can all be observed using thermal cameras (see \mbox{Table \ref{table:imaging-techniques}}).
+
+
+% **Better FSPMs:**
+\section{Improving Mechanistic Plant Modeling}
+
+Our research with FSPMs also highlighted some blind spots in mechanistic plant modeling.
+Most importantly, we see a need for developing mechanistic models that operate at a much smaller time resolution, i.e.\ minute- or second-scale.
+Another area that deserves further attention is modeling chaotic behavior in plant physiological processes.
+Understanding chaos in reservoirs and studying how input signals can amplify or suppress chaotic behavior is paramount to the successful application of physical reservoir computing \citep{nakajima_physical_2020}.
+The formulas and methods in this book can be adapted into a toolset for validating the behavior of plant models.
+For example, \mbox{Equation \ref{methods:reservoir_divergence}} can be used to measure the chaos present in the plant model quantitatively.  
+
+
+% **Future work:**
+\section{Future Work}
+
+% *Expanding on the foundation:*
+The study of using plants as a substrate for reservoir computing is still in its infancy.
+There are several yet unexplored topics to extend the foundation of plant RC.
+For example, we currently only have data on RC with three species: strawberry plants from \citet{pieters_reservoir_2022}, and now \textit{in silico} versions of grapevine and wheat.
+Further research must establish a broader basis for predicting the reservoir properties of a species, e.g. by studying the role of the size of the plant.
+Another area that requires attention is how RC can be reconciled with plant growth.
+For example, we can use online learning approaches such as Hebbian learning or methods inspired by neuromorphic systems to fit readout functions that update as the plant's physiological behavior changes.
+
+% *Moving towards applications:*
+Looking towards applications, there are numerous exciting paths to explore.
+For example, plant RC could detect abiotic stresses such as heat or drought stress.
+Reservoir computing could also be applied in phenotyping to characterize the plant's physiological response to various environments.
+Even more ambitious, plant RC could be used to design a closed-loop system that optimizes greenhouse conditions for vegetative growth and crop yield.
+We could use reward-modulated Hebbian learning techniques \citep{burms_reward-modulated_2015} to create a self-learning control system that adapts to the needs of the plant as it grows.
+Here we can recommend the continued use of CN-Wheat \citep{barillot_cn-wheat_2016} and WheatFspm \citep{gauthier_functional_2020} for an \textit{in silico} proof-of-concept. 
+These FSPMs model vegetative and grain growth, respectively, and showed stable behavior in our experiments.
+
+
+% **Conclusion:**
+% \section{Conclusion}
+\vspace{0.5cm}
+
+We believe that the results from this work form good additional evidence that plants can be used as a substrate for physical reservoir computing.
+Our results can serve as a guide for future research in plant RC, both \textit{in vivo} and \textit{in silico}.
+This is just the starting point for plant reservoir computing. 
+If knowledge and technology can scale, there will be countless opportunities in agricultural technology.

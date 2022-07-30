@@ -1,0 +1,49 @@
+
+\begin{sidewaystable}[hbpt]
+    \centering
+    \caption[Imaging techniques for various plant-physiological processes.]{Imaging techniques for various plant-physiological processes. From \citet{pieters_reservoir_2022}: ``Depending on sensor type, different target traits can be investigated. Moreover, the timescale of the physiological process is also indicated. When measuring on this timescale, we can observe noticeable variation in that particular trait. It ranges days (d), hours (h) to minutes (min) and seconds (s).'' Table reused from \citet{pieters_reservoir_2022} with permission from the author.}
+    \label{table:imaging-techniques}
+    % \tiny
+
+    % \def\arraystretch{1.2}
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{sensor}                                    & \textbf{target trait}                                   & \textbf{timescale}                 & \textbf{reference}                               \\
+        \midrule
+        \multirow{6}{6cm}{thermal camera}                  & leaf temperature $T_\text{leaf}$                        & s→min & \textcite{costa2013}                             \\
+                                                           & stomatal conductance (\textleftarrow $T_\text{leaf}$)   & s→min & \textcite{jones1999}                             \\
+                                                           & transpiration (\textleftarrow $T_\text{leaf}$)          & s→min & \textcite{maes2012}                              \\
+                                                           & drought stress (\textleftarrow $T_\text{leaf}$)         & d                          & \textcite{deswaef2021}                           \\
+                                                           & diseases and pathogens (\textleftarrow $T_\text{leaf}$) & h→d      & \textcite{costa2013}                             \\
+                                                           & heat stress (\textleftarrow $T_\text{leaf}$)            & min→h   & \textcite{janka2013}                             \\
+        \midrule
+        % depth camera/\glsxtrshort{LiDAR}                                 & 3D plant architecture                                   & h→d      & \textcite{busemeyer2013}, \textcite{friedli2016} \\
+        depth camera/\glsxtrshort{LiDAR}                                 & 3D plant architecture                                   & h→d      & \textcite{busemeyer2013}, \textcite{friedli2016} \\
+        \midrule
+        \multirow{6}{6cm}{\glsxtrshort{RGB} camera}                      & leaf area growth                                        & h→d      & \textcite{walter2007}                            \\
+                                                           & plant height                                            & h→d      & \textcite{borra-serrano2019}                     \\
+                                                           & plant biomass                                           & h→d      & \textcite{golzarian2011}                         \\
+                                                           & plant size and architecture                             & h→d      & \textcite{lootens2016}                           \\
+                                                           & drought stress (reflectance and biomass)                & d                          & \textcite{mazis2020}                             \\
+                                                           & diseases and pathogens (reflectance)                    & h→d      & \textcite{chaerle2007}                           \\
+        \midrule
+        \multirow{8}{6cm}{chlorophyll fluorescence imager} & leaf photosynthesis                                     & min→h   & \textcite{baker2008}                             \\
+                                                           & stomatal conductance                                    & s→min & \textcite{nejad2005}                             \\
+                                                           & chilling stress                                         & min→h   & \textcite{devacht2011}                           \\
+                                                           & drought stress                                          & d                          & \textcite{meyer1999}                             \\
+                                                           & diseases and pathogens                                  & min→h   & \textcite{berger2007}                            \\
+                                                           & heat stress                                             & h                         & \textcite{briantais1996}                         \\
+                                                           & salt stress                                             & h→d      & \textcite{moradi2007}                            \\
+                                                           & nutrient deficiency                                     & d                          & \textcite{ciompi1996}                            \\
+        \midrule
+        \multirow{7}{6cm}{hyperspectral camera}            & leaf pigments                                           & d                          & \textcite{blackburn2007}                         \\
+                                                           & canopy density                                          & d                          & \textcite{carlson1997}                           \\
+                                                           & photosynthesis (PRI)                                    & min→h   & \textcite{inoue2008}                             \\
+                                                           & water content                                           & h→d      & \textcite{whetton2018}                           \\
+                                                           & drought stress                                          & d                          & \textcite{berger2010}                            \\
+                                                           & diseases and pathogens                                  & h→d      & \textcite{bock2010,vandevijver2020}              \\
+                                                           & nutrient deficiency                                     & d                          & \textcite{zhao2005}                              \\
+        \bottomrule
+    \end{tabular}
+    
+\end{sidewaystable}

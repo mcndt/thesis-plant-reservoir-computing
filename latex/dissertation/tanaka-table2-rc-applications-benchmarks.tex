@@ -1,0 +1,35 @@
+% TODO: make this table prettier (2022-02-17)
+% TODO: add references in this table to bibliography (2022-02-17)
+\begin{table}[!ht]
+    \raggedleft
+    \caption{
+        Applications and related benchmark tasks of RC. This table originally appeared in \citet{tanaka_recent_2019} and has been reused under the CC BY 4.0 license.
+    }
+    % \def\arraystretch{1.4}%  1 is the default, change whatever you need
+    \begin{tabular}{p{0.25\linewidth}  p{0.7\linewidth}}
+    \toprule
+        \textbf{Applications} & \textbf{Benchmark tasks} \\ 
+        \midrule
+        Pattern classification & Spoken digit recognition (Verstraeten, Schrauwen, Stroobandt and Van Campenhout, 2005), 
+        Waveform classification (Paquot et al., 2012), 
+        Human action recognition (Soh \& Demiris, 2012),
+        Handwritten digit image recognition (Jalalvand, Van Wallendael, \& Van de Walle, 2015) \\
+        \arrayrulecolor{black!10!white}
+        \midrule
+        Time series forecasting & Chaotic time series prediction (Jaeger, 2001),
+        NARMA time series prediction (Jaeger, 2003) \\
+        \midrule
+        Pattern generation & Sine-wave generation (Jaeger, 2002), 
+        Limit cycle generation (Hauser, Ijspeert, Füchslin, \& Maass, 2012) \\
+        \midrule
+        Adaptive filtering and control & Channel equalization (Jaeger \& Haas, 2004) \\
+        \midrule
+        System approximation & Temporal XOR task (Bertschinger \&; Natschläger, 2004), 
+        Temporal parity task (Bertschinger \&; Natschläger, 2004) \\
+        \midrule
+        Short-term memory & Memory capacity (Jaeger, 2002) \\
+    \arrayrulecolor{black}
+    \bottomrule
+    \end{tabular}
+    \label{table:rc-applications-benchmarks}
+\end{table}

@@ -1,0 +1,39 @@
+\chapter{Experimental Design} \label{chapter:exp-setup}
+
+% Introduction
+ Chapter \ref{chapter:lit-prc} established the necessary background on \acrshort{rc} and explained how physical media can function as a computational resource.
+Then, Chapter \ref{chapter:fspm} introduced the rich research field of functional-structural plant modeling.
+Now, we present how we will identify reservoir dynamics in plants and how we can quantitatively measure the reservoir performance, using simulated plants as the experiment subject.
+
+
+\section{Reservoir Dynamics in Plants}
+\input{sections/experimental-design/reservoir-dynamics-in-plants}
+
+
+\section{Framework For Measuring Plant Reservoir Dynamics}
+\input{sections/experimental-design/framework}
+
+
+\section{Considered Reservoirs} \label{sec:considered-reservoirs}
+\input{sections/experimental-design/model-requirements}
+
+
+\section{Summary}
+
+This chapter proposed a framework for quantitatively measuring reservoir characteristics of plant-physiological behavior.
+In the first test, we use a suite of regression targets and a standard readout model to measure the capacity to perform nonlinear tasks.
+% The predicted series is compared to the ground truth using the \acrshort{nmse} metric.
+The second test investigates the fading memory property in an experiment where a brief artificial stimulus is applied to the plant's environment.
+% We measure how the plant dynamics restore to their original trajectory using a divergence measure based on \acrshort{nmse}.
+For the considered reservoirs, we prefer observable physiological traits using contactless sensing technologies. 
+Still, the selection of reservoirs shown in the results will depend on what is available in the selected plant models.
+
+% - Briefly recap how we will qualitatively and quantitatively measure reservoir performance
+% 	- input separation experiments
+% 	- fading memory experiments
+% - Briefly recap what specific requirements this needs of our plant models.
+
+
+\input{tables/pieters2022_table_3_1}
+
+\input{tables/pieters2022_table_4_1}
